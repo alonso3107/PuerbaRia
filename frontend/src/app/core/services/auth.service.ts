@@ -2,6 +2,7 @@ import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from '@environments/environment';
 
 export interface RegisterRequest {
   name: string;
@@ -27,7 +28,7 @@ export interface AuthResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly apiUrl = 'https://proyect-mweb-back.onrender.com/api/v1/auth';
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly tokenKey = 'auth_token';
   private readonly userKey = 'auth_user';
   private readonly isBrowser = isPlatformBrowser(this.platformId);

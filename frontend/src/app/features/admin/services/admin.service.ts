@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
 
 export interface AdminUser {
   id: number;
@@ -38,7 +39,7 @@ export type VoucherDecision = 'VALIDADO' | 'RECHAZADO';
 })
 export class AdminService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://proyect-mweb-back.onrender.com/api/v1/admin';
+  private readonly apiUrl = `${environment.apiUrl}/admin`;
 
   /**
    * Obtiene la lista completa de usuarios registrados.

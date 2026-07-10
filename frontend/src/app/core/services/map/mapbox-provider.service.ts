@@ -1,6 +1,6 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { MapProvider, MapCoordinates, MapMarkerOptions } from '../../interfaces/map-provider.interface';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 import type mapboxgl from 'mapbox-gl';
 
 @Injectable({

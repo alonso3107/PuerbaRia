@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError, timeout } from 'rxjs';
+import { environment } from '@environments/environment';
 
 /** Respuesta exitosa del backend al subir un voucher */
 export interface VoucherResponse {
@@ -22,7 +23,7 @@ export interface VoucherError {
 @Injectable({ providedIn: 'root' })
 export class VoucherService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://proyect-mweb-back.onrender.com/api/v1/vouchers';
+  private readonly apiUrl = `${environment.apiUrl}/vouchers`;
 
   /**
    * Envia el formulario de voucher al backend.
