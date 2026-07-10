@@ -15,31 +15,32 @@ import org.springframework.stereotype.Component;
 public class AdminUserInitializer implements ApplicationRunner {
 
     @Value("${admin_email}")
-    private String ADMIN_EMAIL;
+    private String adminEmail;
 
     @Value("${admin_password}")
-    private String ADMIN_PASSWORD;
+    private String adminPassword;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) {
-        var existingAdmin = userRepository.findByEmail(ADMIN_EMAIL);
-        if (existingAdmin.isPresent()) {
-            User admin = existingAdmin.get();
-            if (admin.getRole() != Role.ADMIN) {
-                admin.setRole(Role.ADMIN);
-                admin.setPassword(passwordEncoder.encode(ADMIN_PASSWORD));
-                userRepository.save(admin);
-            }
-            return;
-        }
+        userRepository.findByEmail(adminEmail).ifPresentOrElse(this::asegurarRolAdmin, this::crearAdmin);
+    }
 
+    private void asegurarRolAdmin(User usuario) {
+        if (usuario.getRole() != Role.ADMIN) {
+            usuario.setRole(Role.ADMIN);
+            usuario.setPassword(passwordEncoder.encode(adminPassword));
+            userRepository.save(usuario);
+        }
+    }
+
+    private void crearAdmin() {
         User admin = User.builder()
                 .name("Administrador")
-                .email(ADMIN_EMAIL)
-                .password(passwordEncoder.encode(ADMIN_PASSWORD))
+                .email(adminEmail)
+                .password(passwordEncoder.encode(adminPassword))
                 .role(Role.ADMIN)
                 .build();
 

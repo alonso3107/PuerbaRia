@@ -1,34 +1,22 @@
 package com.puerbaria.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * DTO para mostrar vouchers dentro del dashboard administrativo.
- */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class VoucherAdminResponse {
-
-    private Long id;
-    private String nombre;
-    private String habitacion;
-    private String tipoComprobante;
-    private BigDecimal monto;
-    private String codigoOperacion;
-    private LocalDate fechaPago;
-    private String celular;
-    private String archivoNombre;
-    private String archivoTipo;
-    private String estado;
-    private LocalDateTime fechaSubida;
-    private String archivoUrl;
+public record VoucherAdminResponse(
+        Long id,
+        String nombre,
+        String habitacion,
+        String tipoComprobante,
+        BigDecimal monto,
+        String codigoOperacion,
+        LocalDate fechaPago,
+        String celular,
+        String archivoNombre,
+        String archivoTipo,
+        String estado,
+        LocalDateTime fechaSubida,
+        String archivoUrl
+) {
 }

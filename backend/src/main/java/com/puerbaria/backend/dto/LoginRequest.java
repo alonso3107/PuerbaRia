@@ -1,18 +1,14 @@
 package com.puerbaria.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-/**
- * Objeto para recibir los datos de inicio de sesión.
- */
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class LoginRequest {
-    private String email;
-    private String password;
+public record LoginRequest(
+        @NotBlank(message = "El correo es obligatorio")
+        @Email(message = "El correo no tiene un formato valido")
+        String email,
+
+        @NotBlank(message = "La contrasena es obligatoria")
+        String password
+) {
 }

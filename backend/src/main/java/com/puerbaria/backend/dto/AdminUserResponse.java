@@ -1,17 +1,4 @@
 package com.puerbaria.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class AdminUserResponse {
-    private Long id;
-    private String name;
-    private String email;
-    private String role;
+public record AdminUserResponse(Long id, String name, String email, String role) {
 }

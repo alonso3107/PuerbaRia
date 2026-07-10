@@ -3,6 +3,7 @@ package com.puerbaria.backend.service;
 import com.puerbaria.backend.dto.AuthResponse;
 import com.puerbaria.backend.dto.LoginRequest;
 import com.puerbaria.backend.dto.RegisterRequest;
+import com.puerbaria.backend.exception.RecursoNoEncontradoException;
 import com.puerbaria.backend.model.Role;
 import com.puerbaria.backend.model.User;
 import com.puerbaria.backend.repository.UserRepository;
@@ -12,10 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-/**
- * Servicio de Autenticación.
- * Aquí ocurre la lógica para registrar nuevos usuarios y validar el inicio de sesión.
- */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -25,53 +22,34 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    /**
-     * Registra un nuevo usuario en la base de datos.
-     */
     public AuthResponse register(RegisterRequest request) {
-        // Verificar que el email no este ya registrado
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("El correo ya esta registrado");
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new IllegalArgumentException("El correo ya esta registrado");
         }
-        
-        var user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER) // Por defecto, todos son usuarios
+
+        User user = User.builder()
+                .name(request.name())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.USER)
                 .build();
-        
+
         userRepository.save(user);
-        
-        var jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder()
-                .token(jwtToken)
-                .name(user.getName())
-                .email(user.getEmail())
-                .role(user.getRole().name())
-                .build();
+        return construirRespuesta(user);
     }
 
-    /**
-     * Valida las credenciales y devuelve un token si son correctas.
-     */
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        
-        var jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder()
-                .token(jwtToken)
-                .name(user.getName())
-                .email(user.getEmail())
-                .role(user.getRole().name())
-                .build();
+                new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+
+        return construirRespuesta(user);
+    }
+
+    private AuthResponse construirRespuesta(User user) {
+        String token = jwtService.generateToken(user);
+        return new AuthResponse(token, user.getName(), user.getEmail(), user.getRole().name());
     }
 }

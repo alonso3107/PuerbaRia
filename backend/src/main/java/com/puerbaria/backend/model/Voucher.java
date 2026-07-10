@@ -3,17 +3,16 @@ package com.puerbaria.backend.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * Entidad Voucher — Comprobante de pago subido por el huesped.
- */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,7 +30,6 @@ public class Voucher {
     @Column(nullable = false)
     private String habitacion;
 
-    @Column(nullable = true)
     private String email;
 
     @Column(nullable = false)
@@ -56,17 +54,18 @@ public class Voucher {
 
     private String archivoTipo;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String estado;
+    private EstadoVoucher estado;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaSubida;
 
     @PrePersist
-    protected void onCreate() {
-        if (this.estado == null) {
-            this.estado = "PENDIENTE";
+    void onCreate() {
+        if (estado == null) {
+            estado = EstadoVoucher.PENDIENTE;
         }
-        this.fechaSubida = LocalDateTime.now();
+        fechaSubida = LocalDateTime.now();
     }
 }
