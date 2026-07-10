@@ -1,8 +1,8 @@
-package com.puerbaria.backend.backend.controller;
+package com.puerbaria.backend.controller;
 
-import com.puerbaria.backend.backend.dto.VoucherRequest;
-import com.puerbaria.backend.backend.model.Voucher;
-import com.puerbaria.backend.backend.service.VoucherService;
+import com.puerbaria.backend.dto.VoucherRequest;
+import com.puerbaria.backend.model.Voucher;
+import com.puerbaria.backend.service.VoucherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

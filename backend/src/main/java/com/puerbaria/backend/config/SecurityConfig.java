@@ -1,4 +1,4 @@
-package com.puerbaria.backend.backend.config;
+package com.puerbaria.backend.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

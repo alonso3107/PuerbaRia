@@ -1,7 +1,7 @@
-package com.puerbaria.backend.backend.controller;
+package com.puerbaria.backend.controller;
 
-import com.puerbaria.backend.backend.dto.VoucherAdminResponse;
-import com.puerbaria.backend.backend.service.VoucherService;
+import com.puerbaria.backend.dto.VoucherAdminResponse;
+import com.puerbaria.backend.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

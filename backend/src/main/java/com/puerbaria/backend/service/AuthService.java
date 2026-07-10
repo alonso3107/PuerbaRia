@@ -1,11 +1,11 @@
-package com.puerbaria.backend.backend.service;
+package com.puerbaria.backend.service;
 
-import com.puerbaria.backend.backend.dto.AuthResponse;
-import com.puerbaria.backend.backend.dto.LoginRequest;
-import com.puerbaria.backend.backend.dto.RegisterRequest;
-import com.puerbaria.backend.backend.model.Role;
-import com.puerbaria.backend.backend.model.User;
-import com.puerbaria.backend.backend.repository.UserRepository;
+import com.puerbaria.backend.dto.AuthResponse;
+import com.puerbaria.backend.dto.LoginRequest;
+import com.puerbaria.backend.dto.RegisterRequest;
+import com.puerbaria.backend.model.Role;
+import com.puerbaria.backend.model.User;
+import com.puerbaria.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

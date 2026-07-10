@@ -1,6 +1,6 @@
-package com.puerbaria.backend.backend.repository;
+package com.puerbaria.backend.repository;
 
-import com.puerbaria.backend.backend.model.Voucher;
+import com.puerbaria.backend.model.Voucher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

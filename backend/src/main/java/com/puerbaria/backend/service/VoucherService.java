@@ -1,9 +1,9 @@
-package com.puerbaria.backend.backend.service;
+package com.puerbaria.backend.service;
 
-import com.puerbaria.backend.backend.dto.VoucherAdminResponse;
-import com.puerbaria.backend.backend.dto.VoucherRequest;
-import com.puerbaria.backend.backend.model.Voucher;
-import com.puerbaria.backend.backend.repository.VoucherRepository;
+import com.puerbaria.backend.dto.VoucherAdminResponse;
+import com.puerbaria.backend.dto.VoucherRequest;
+import com.puerbaria.backend.model.Voucher;
+import com.puerbaria.backend.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;

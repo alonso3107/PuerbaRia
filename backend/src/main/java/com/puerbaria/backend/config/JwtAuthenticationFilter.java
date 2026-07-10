@@ -1,6 +1,6 @@
-package com.puerbaria.backend.backend.config;
+package com.puerbaria.backend.config;
 
-import com.puerbaria.backend.backend.service.JwtService;
+import com.puerbaria.backend.service.JwtService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

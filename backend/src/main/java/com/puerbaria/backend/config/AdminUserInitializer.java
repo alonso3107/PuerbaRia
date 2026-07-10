@@ -1,8 +1,8 @@
-package com.puerbaria.backend.backend.config;
+package com.puerbaria.backend.config;
 
-import com.puerbaria.backend.backend.model.Role;
-import com.puerbaria.backend.backend.model.User;
-import com.puerbaria.backend.backend.repository.UserRepository;
+import com.puerbaria.backend.model.Role;
+import com.puerbaria.backend.model.User;
+import com.puerbaria.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;

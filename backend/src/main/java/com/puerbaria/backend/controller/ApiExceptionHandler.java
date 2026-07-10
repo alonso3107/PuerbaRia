@@ -1,4 +1,4 @@
-package com.puerbaria.backend.backend.controller;
+package com.puerbaria.backend.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

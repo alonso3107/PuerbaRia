@@ -1,4 +1,4 @@
-package com.puerbaria.backend.backend.dto;
+package com.puerbaria.backend.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

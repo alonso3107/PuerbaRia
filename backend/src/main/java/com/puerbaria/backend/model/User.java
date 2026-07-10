@@ -1,4 +1,4 @@
-package com.puerbaria.backend.backend.model;
+package com.puerbaria.backend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

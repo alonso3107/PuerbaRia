@@ -1,4 +1,4 @@
-package com.puerbaria.backend.backend.service;
+package com.puerbaria.backend.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

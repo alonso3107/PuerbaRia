@@ -1,6 +1,6 @@
-package com.puerbaria.backend.backend.config;
+package com.puerbaria.backend.config;
 
-import com.puerbaria.backend.backend.repository.UserRepository;
+import com.puerbaria.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

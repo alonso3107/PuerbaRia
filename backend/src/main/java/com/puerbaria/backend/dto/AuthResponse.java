@@ -1,4 +1,4 @@
-package com.puerbaria.backend.backend.dto;
+package com.puerbaria.backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,9 +1,9 @@
-package com.puerbaria.backend.backend.controller;
+package com.puerbaria.backend.controller;
 
-import com.puerbaria.backend.backend.dto.AuthResponse;
-import com.puerbaria.backend.backend.dto.LoginRequest;
-import com.puerbaria.backend.backend.dto.RegisterRequest;
-import com.puerbaria.backend.backend.service.AuthService;
+import com.puerbaria.backend.dto.AuthResponse;
+import com.puerbaria.backend.dto.LoginRequest;
+import com.puerbaria.backend.dto.RegisterRequest;
+import com.puerbaria.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
