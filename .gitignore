@@ -8,3 +8,6 @@ Desktop.ini
 
 # Claude Code (configuracion local de la maquina)
 .claude/settings.local.json
+
+# Indice local de CodeGraph
+.codegraph/

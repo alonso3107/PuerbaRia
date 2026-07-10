@@ -1,5 +1,10 @@
 {
   "lsp": {
+    "jdtls": {
+      "settings": {
+        "java_home": "C:\\Users\\asus\\.jdks\\openjdk-26.0.1"
+      }
+    },
     "typescript-language-server": {
       "initialization_options": {
         "preferences": {
