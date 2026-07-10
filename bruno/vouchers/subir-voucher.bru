@@ -1,0 +1,26 @@
+meta {
+  name: Subir voucher
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/vouchers
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  nombre: Juan Perez
+  habitacion: Suite Oceano
+  tipoComprobante: Yape
+  monto: 250.00
+  codigoOperacion: 12345678
+  fechaPago: 2026-07-10
+  celular: 987654321
+  archivo: @file()
+}
+
+docs {
+  Seleccionar un archivo JPG, PNG, WEBP o PDF (max 10MB) en el campo "archivo" antes de enviar.
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Ver archivo de voucher
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/vouchers/1/archivo
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  Devuelve la imagen o PDF del comprobante. Cambiar el 1 de la URL por el id del voucher.
+}

@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "PuerbaRia API",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Mis vouchers
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/client/vouchers
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  Requiere iniciar sesion (request Login) con la cuenta del cliente.
+}

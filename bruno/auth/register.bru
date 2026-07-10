@@ -1,0 +1,26 @@
+meta {
+  name: Register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Usuario Prueba",
+    "email": "prueba@correo.com",
+    "password": "Prueba123"
+  }
+}
+
+tests {
+  test("registra y devuelve token", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.token).to.be.a("string");
+  });
+}
