@@ -1,0 +1,27 @@
+@reference "../../../../styles.scss";
+
+:host {
+  display: block;
+}
+
+footer {
+  background-color: var(--color-fondo);
+}
+
+.dark footer {
+  background-color: var(--color-fondo);
+}
+
+/* Micro-interaction para links del footer (design spells) */
+.enlace-footer {
+  @apply relative text-texto-suave hover:text-texto transition-colors duration-300 text-sm tracking-widest uppercase inline-block w-fit;
+}
+
+.enlace-footer::after {
+  content: '';
+  @apply absolute -bottom-1 left-0 w-full h-[1px] bg-acento scale-x-0 transition-transform origin-left duration-300 ease-out;
+}
+
+.enlace-footer:hover::after {
+  @apply scale-x-100;
+}

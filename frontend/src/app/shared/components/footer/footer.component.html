@@ -1,0 +1,115 @@
+<footer class="relative bg-fondo text-texto pt-24 pb-8 overflow-hidden transition-colors duration-500 z-10 border-t border-borde">
+  <!-- Efecto de gradiente sutil superior (magic spell) -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-acento/50 to-transparent opacity-50"></div>
+
+  <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 mb-20 animate-revelarArriba">
+      
+      <!-- Columna Izquierda: Newsletter & Info -->
+      <div class="md:col-span-5 flex flex-col gap-8">
+        <a routerLink="/" class="inline-flex flex-col group">
+          <span class="text-texto font-heading text-3xl md:text-4xl tracking-widest font-bold group-hover:text-acento transition-colors duration-500">PUERBA RIA</span>
+          <span class="text-acento text-[10px] tracking-[0.4em] uppercase mt-2">Coastal Luxury</span>
+        </a>
+        <p class="text-texto-suave font-cuerpo text-sm md:text-base leading-relaxed text-pretty max-w-sm">
+          Un refugio de lujo frente al mar donde la elegancia y la serenidad se encuentran para ofrecerle una estancia inolvidable.
+        </p>
+        
+        <div class="mt-4 max-w-sm">
+          <h4 class="text-texto font-heading text-xs tracking-[0.2em] uppercase mb-4 opacity-70">Newsletter</h4>
+          <form (ngSubmit)="suscribirNewsletter()" class="relative group">
+            <input type="email" [formControl]="emailControl"
+                   placeholder="Su correo electronico"
+                   class="w-full bg-transparent border-b py-3 px-0 text-texto text-sm
+                          placeholder:text-texto-mute focus:outline-none transition-colors"
+                   [class.border-red-500]="emailControl.invalid && emailControl.touched"
+                   [class.border-borde]="!(emailControl.invalid && emailControl.touched)"
+                   [class.focus:border-acento]="!(emailControl.invalid && emailControl.touched)" />
+            <button type="submit" [disabled]="newsletterEnviando()"
+                    class="absolute right-0 top-1/2 -translate-y-1/2 text-texto-suave hover:text-acento 
+                           transition-all duration-300 transform group-hover:translate-x-1">
+              @if (newsletterEnviando()) {
+                <svg class="animate-spin h-5 w-5 text-acento" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              }
+            </button>
+            <!-- Subrayado magico animado -->
+            <div class="absolute bottom-0 left-0 w-full h-[1px] bg-acento scale-x-0 group-focus-within:scale-x-100 transition-transform origin-left duration-500"></div>
+          </form>
+          @if (emailControl.invalid && emailControl.touched) {
+            <p class="text-red-500 text-xs mt-2 animate-fundido">
+              Por favor, ingrese un correo electronico valido.
+            </p>
+          }
+          @if (newsletterEnviado()) {
+            <p class="text-acento text-xs mt-3 animate-fundido flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              Gracias por suscribirse.
+            </p>
+          }
+        </div>
+      </div>
+
+      <!-- Columna Central: Enlaces Rápidos -->
+      <div class="md:col-span-3 flex flex-col md:ml-auto">
+        <h4 class="text-texto font-heading text-xs tracking-[0.2em] uppercase mb-8 opacity-70">Descubrir</h4>
+        <ul class="flex flex-col gap-5">
+          <li><a routerLink="/habitaciones" class="enlace-footer">Suites & Habitaciones</a></li>
+          <li><a routerLink="/restaurante" class="enlace-footer">Alta Cocina</a></li>
+          <li><a routerLink="/spa-wellness" class="enlace-footer">Spa & Bienestar</a></li>
+          <li><a routerLink="/contacto" class="enlace-footer">Contacto</a></li>
+          <li><a routerLink="/login" class="enlace-footer">Portal de Miembros</a></li>
+        </ul>
+      </div>
+
+      <!-- Columna Derecha: Contacto -->
+      <div class="md:col-span-4 flex flex-col md:ml-auto">
+        <h4 class="text-texto font-heading text-xs tracking-[0.2em] uppercase mb-8 opacity-70">Contacto</h4>
+        <ul class="flex flex-col gap-6">
+          <li class="group flex items-start gap-4 text-texto-suave text-sm hover:text-texto transition-colors duration-300 cursor-default">
+            <div class="p-2 border border-borde rounded-full group-hover:border-acento group-hover:bg-acento-suave transition-colors duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-acento" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </div>
+            <span class="mt-1 leading-relaxed text-pretty">Av. Ayabaca 345<br/>Ica, Peru</span>
+          </li>
+          <li class="group flex items-center gap-4 text-texto-suave text-sm hover:text-texto transition-colors duration-300">
+            <div class="p-2 border border-borde rounded-full group-hover:border-acento group-hover:bg-acento-suave transition-colors duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-acento" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+            </div>
+            <a href="tel:+51950832129" class="tabular-nums hover:text-acento transition-colors">+51 950 832 129</a>
+          </li>
+          <li class="group flex items-center gap-4 text-texto-suave text-sm hover:text-texto transition-colors duration-300">
+            <div class="p-2 border border-borde rounded-full group-hover:border-acento group-hover:bg-acento-suave transition-colors duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-acento" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+            <a href="mailto:info@puerbaria.com" class="hover:text-acento transition-colors">info&commat;puerbaria.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Marca de agua gigante y enlaces legales -->
+    <div class="pt-8 border-t border-borde flex flex-col items-center">
+      <div class="w-full overflow-hidden flex justify-center mb-10 opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-texto">
+        <span class="text-[12vw] font-heading font-bold whitespace-nowrap tracking-tighter leading-none" style="font-family: var(--font-editorial);">PUERBA RIA</span>
+      </div>
+      
+      <div class="w-full flex flex-col md:flex-row justify-between items-center gap-6">
+        <p class="text-texto-mute text-xs tracking-widest uppercase">
+          &copy; 2026 Puerba Ria.
+        </p>
+        <div class="flex flex-wrap justify-center gap-8">
+          <a href="#" class="text-texto-suave hover:text-texto text-xs tracking-widest uppercase transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-px after:bg-texto after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Privacidad</a>
+          <a href="#" class="text-texto-suave hover:text-texto text-xs tracking-widest uppercase transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-px after:bg-texto after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Terminos</a>
+          <a href="#" class="text-texto-suave hover:text-texto text-xs tracking-widest uppercase transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-px after:bg-texto after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Legal</a>
+        </div>
+        
+        <!-- Scroll to Top (micro-interaction) -->
+        <button (click)="scrollToTop()" class="group w-10 h-10 border border-borde rounded-full flex items-center justify-center text-texto-suave hover:text-acento hover:border-acento hover:bg-acento-suave transition-all duration-500" aria-label="Volver arriba">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:-translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>

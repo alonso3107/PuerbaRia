@@ -1,0 +1,18 @@
+@reference "../../../../../styles.scss";
+
+:host { display: block; }
+
+/* Transición de página */
+section {
+  transition: background-color 0.5s ease;
+}
+
+/* Opciones del select */
+select option {
+  background: var(--color-superficie);
+  color: var(--color-texto-principal);
+}
+.dark select option {
+  background: var(--color-superficie-oscuro);
+  color: var(--color-texto-principal-oscuro);
+}

@@ -1,0 +1,10 @@
+@reference "../../../../../styles.scss";
+
+:host {
+  display: block;
+}
+
+/* Transicion de pagina completa */
+section {
+  transition: background-color 0.5s ease;
+}

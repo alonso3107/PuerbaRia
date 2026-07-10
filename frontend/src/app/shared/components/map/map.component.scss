@@ -1,0 +1,91 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.map-shell {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-superficie) 82%, white 18%), var(--color-fondo));
+  min-height: 18rem;
+}
+
+.map-container {
+  /* Ensure Mapbox Canvas takes full space */
+  width: 100%;
+  height: 100%;
+}
+
+.map-state {
+  align-items: center;
+  background: color-mix(in srgb, var(--color-fondo) 88%, transparent 12%);
+  color: var(--color-texto-suave);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.78rem;
+  font-weight: 600;
+  gap: 0.75rem;
+  inset: 0;
+  justify-content: center;
+  letter-spacing: 0.16em;
+  position: absolute;
+  text-transform: uppercase;
+  z-index: 2;
+
+  i {
+    color: var(--color-acento);
+    font-size: 1.5rem;
+    letter-spacing: 0;
+  }
+}
+
+.map-state-error {
+  background: color-mix(in srgb, var(--color-superficie) 92%, transparent 8%);
+}
+
+/* Premium Popup Styling for Mapbox */
+::ng-deep .premium-popup {
+  .mapboxgl-popup-content {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    padding: 1rem 1.25rem;
+    font-family: var(--font-cuerpo);
+  }
+
+  .mapboxgl-popup-tip {
+    border-top-color: var(--color-fondo);
+  }
+
+  .popup-title {
+    font-family: var(--font-editorial);
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--color-texto);
+  }
+
+  .popup-text {
+    font-size: 0.875rem;
+    color: var(--color-texto-suave);
+    line-height: 1.5;
+  }
+
+  .popup-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-acento);
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+      color: var(--color-acento-hover);
+      text-decoration: underline;
+    }
+  }
+}

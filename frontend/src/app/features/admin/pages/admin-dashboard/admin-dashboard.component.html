@@ -1,0 +1,311 @@
+<p-toast position="top-right" />
+
+<section class="admin-dashboard min-h-screen bg-fondo pt-28 pb-16 px-6 md:px-12 magic-entrance">
+  <div class="max-w-7xl mx-auto">
+    <div class="dashboard-header magic-entrance magic-stagger-1">
+      <div>
+        <p class="subtitulo-seccion mb-3">Administracion</p>
+        <h1 class="font-heading text-4xl md:text-5xl text-texto">Dashboard</h1>
+      </div>
+
+      <p-button
+        label="Actualizar"
+        icon="pi pi-refresh"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="cargarUsuarios(); cargarVouchers()"
+      />
+    </div>
+
+    <div class="metrics-grid">
+      <p-card styleClass="metric-card">
+        <p class="metric-label">Usuarios</p>
+        <p class="metric-value">{{ users().length }}</p>
+      </p-card>
+
+      <p-card styleClass="metric-card">
+        <p class="metric-label">Administradores</p>
+        <p class="metric-value">{{ adminCount() }}</p>
+      </p-card>
+
+      <p-card styleClass="metric-card accent">
+        <p class="metric-label">Vouchers</p>
+        <p class="metric-value">{{ vouchers().length }}</p>
+      </p-card>
+
+      <p-card styleClass="metric-card dark">
+        <p class="metric-label">Pendientes</p>
+        <p class="metric-value">{{ pendingVoucherCount() }}</p>
+      </p-card>
+    </div>
+
+    <div class="content-grid">
+      <section class="panel-surface">
+        <div class="panel-heading">
+          <div>
+            <p class="panel-kicker">Revision de pagos</p>
+            <h2>Vouchers recibidos</h2>
+          </div>
+          <span>{{ vouchers().length }} registros</span>
+        </div>
+
+        @if (isLoadingVouchers()) {
+          <div class="panel-state">
+            <p-progress-spinner strokeWidth="3" ariaLabel="Cargando vouchers" />
+            <p>Cargando vouchers...</p>
+          </div>
+        } @else if (vouchersErrorMessage()) {
+          <div class="panel-state error">
+            <i class="pi pi-exclamation-triangle"></i>
+            <p>{{ vouchersErrorMessage() }}</p>
+          </div>
+        } @else {
+          <p-table
+            [value]="vouchers()"
+            [paginator]="vouchers().length > 5"
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]"
+            [tableStyle]="{ 'min-width': '760px' }"
+            styleClass="p-datatable-sm admin-table"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Huesped</th>
+                <th>Habitacion</th>
+                <th>Pago</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th class="text-right">Revision</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-voucher>
+              <tr>
+                <td>
+                  <strong>{{ voucher.nombre }}</strong>
+                  <small>{{ voucher.celular }}</small>
+                </td>
+                <td>{{ voucher.habitacion }}</td>
+                <td>
+                  <strong>{{ voucher.monto | currency: 'PEN' : 'symbol' : '1.2-2' }}</strong>
+                  <small>{{ obtenerEtiquetaComprobante(voucher.tipoComprobante) }} · {{ voucher.codigoOperacion }}</small>
+                </td>
+                <td>{{ voucher.fechaPago | date: 'dd/MM/yyyy' }}</td>
+                <td>
+                  <p-tag
+                    [value]="voucher.estado"
+                    [severity]="obtenerSeveridadVoucher(voucher.estado)"
+                  />
+                </td>
+                <td>
+                  <div class="table-actions">
+                    <p-button
+                      icon="pi pi-eye"
+                      severity="secondary"
+                      [text]="true"
+                      pTooltip="Ver detalle"
+                      tooltipPosition="top"
+                      (onClick)="verDetalleVoucher(voucher)"
+                    />
+                    <p-button
+                      icon="pi pi-external-link"
+                      severity="secondary"
+                      [text]="true"
+                      pTooltip="Abrir archivo"
+                      tooltipPosition="top"
+                      [loading]="openingVoucherId() === voucher.id"
+                      (onClick)="abrirArchivoVoucher(voucher)"
+                    />
+                    <p-button
+                      icon="pi pi-check"
+                      severity="success"
+                      [text]="true"
+                      pTooltip="Aprobar voucher"
+                      tooltipPosition="top"
+                      [disabled]="voucher.estado === 'VALIDADO'"
+                      [loading]="updatingVoucherId() === voucher.id"
+                      (onClick)="actualizarEstadoVoucher(voucher, 'VALIDADO')"
+                    />
+                    <p-button
+                      icon="pi pi-times"
+                      severity="danger"
+                      [text]="true"
+                      pTooltip="Rechazar voucher"
+                      tooltipPosition="top"
+                      [disabled]="voucher.estado === 'RECHAZADO'"
+                      [loading]="updatingVoucherId() === voucher.id"
+                      (onClick)="actualizarEstadoVoucher(voucher, 'RECHAZADO')"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6">
+                  <div class="empty-table">
+                    <i class="pi pi-inbox"></i>
+                    <p>Aun no hay vouchers enviados.</p>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </section>
+
+      <section class="panel-surface">
+        <div class="panel-heading">
+          <div>
+            <p class="panel-kicker">Cuentas</p>
+            <h2>Usuarios registrados</h2>
+          </div>
+          <span>{{ users().length }} cuentas</span>
+        </div>
+
+        @if (isLoadingUsers()) {
+          <div class="panel-state">
+            <p-progress-spinner strokeWidth="3" ariaLabel="Cargando usuarios" />
+            <p>Cargando usuarios...</p>
+          </div>
+        } @else if (usersErrorMessage()) {
+          <div class="panel-state error">
+            <i class="pi pi-exclamation-triangle"></i>
+            <p>{{ usersErrorMessage() }}</p>
+          </div>
+        } @else {
+          <p-table
+            [value]="users()"
+            [paginator]="users().length > 6"
+            [rows]="6"
+            [tableStyle]="{ 'min-width': '620px' }"
+            styleClass="p-datatable-sm admin-table"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-user>
+              <tr>
+                <td>{{ user.id }}</td>
+                <td><strong>{{ user.name }}</strong></td>
+                <td>{{ user.email }}</td>
+                <td>
+                  <p-tag
+                    [value]="user.role"
+                    [severity]="user.role === 'ADMIN' ? 'contrast' : 'secondary'"
+                  />
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4">
+                  <div class="empty-table">
+                    <i class="pi pi-users"></i>
+                    <p>No hay usuarios registrados.</p>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </section>
+    </div>
+  </div>
+</section>
+
+<p-dialog
+  header="Detalle del voucher"
+  [modal]="true"
+  [visible]="isVoucherDialogVisible()"
+  [style]="{ width: 'min(92vw, 560px)' }"
+  (visibleChange)="onVoucherDialogVisibleChange($event)"
+>
+  @if (selectedVoucher(); as voucher) {
+    <div class="voucher-detail">
+      <div>
+        <span>Huesped</span>
+        <strong>{{ voucher.nombre }}</strong>
+      </div>
+      <div>
+        <span>Habitacion</span>
+        <strong>{{ voucher.habitacion }}</strong>
+      </div>
+      <div>
+        <span>Comprobante</span>
+        <strong>{{ obtenerEtiquetaComprobante(voucher.tipoComprobante) }}</strong>
+      </div>
+      <div>
+        <span>Monto</span>
+        <strong>{{ voucher.monto | currency: 'PEN' : 'symbol' : '1.2-2' }}</strong>
+      </div>
+      <div>
+        <span>Codigo de operacion</span>
+        <strong>{{ voucher.codigoOperacion }}</strong>
+      </div>
+      <div>
+        <span>Fecha de pago</span>
+        <strong>{{ voucher.fechaPago | date: 'dd/MM/yyyy' }}</strong>
+      </div>
+      <div>
+        <span>Celular</span>
+        <strong>{{ voucher.celular }}</strong>
+      </div>
+      <div>
+        <span>Archivo</span>
+        <strong>{{ voucher.archivoNombre || 'Sin nombre registrado' }}</strong>
+      </div>
+      <div>
+        <span>Recibido</span>
+        <strong>{{ voucher.fechaSubida | date: 'dd/MM/yyyy HH:mm' }}</strong>
+      </div>
+      <div>
+        <span>Estado</span>
+        <p-tag
+          [value]="voucher.estado"
+          [severity]="obtenerSeveridadVoucher(voucher.estado)"
+        />
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <p-button
+        label="Cerrar"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="cerrarDetalleVoucher()"
+      />
+      <p-button
+        label="Abrir archivo"
+        icon="pi pi-external-link"
+        [loading]="openingVoucherId() === voucher.id"
+        (onClick)="abrirArchivoVoucher(voucher)"
+      />
+      <p-button
+        label="Aprobar"
+        icon="pi pi-check"
+        severity="success"
+        [disabled]="voucher.estado === 'VALIDADO'"
+        [loading]="updatingVoucherId() === voucher.id"
+        (onClick)="actualizarEstadoVoucher(voucher, 'VALIDADO')"
+      />
+      <p-button
+        label="Rechazar"
+        icon="pi pi-times"
+        severity="danger"
+        [outlined]="true"
+        [disabled]="voucher.estado === 'RECHAZADO'"
+        [loading]="updatingVoucherId() === voucher.id"
+        (onClick)="actualizarEstadoVoucher(voucher, 'RECHAZADO')"
+      />
+    </div>
+  }
+</p-dialog>

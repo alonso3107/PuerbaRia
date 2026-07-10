@@ -1,0 +1,19 @@
+@reference "../../../styles.scss";
+
+:host {
+  display: block;
+}
+
+/* Botones de redes sociales */
+a[aria-label]:hover svg {
+  color: var(--color-acento);
+}
+
+select option {
+  background: var(--color-fondo);
+  color: var(--color-texto-principal);
+}
+.dark select option {
+  background: var(--color-fondo-oscuro);
+  color: var(--color-texto-principal-oscuro);
+}

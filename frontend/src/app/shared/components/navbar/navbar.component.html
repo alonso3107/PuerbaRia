@@ -1,0 +1,117 @@
+<nav class="premium-nav fixed top-0 left-0 w-full z-50">
+  <div class="premium-nav-shell">
+    <a routerLink="/" class="brand-lockup group" aria-label="Ir al inicio de Puerba Ria">
+      <span class="brand-mark">
+        <span>PR</span>
+      </span>
+      <span class="brand-copy">
+        <strong>PUERBA RIA</strong>
+        <small>Oceanfront Hotel</small>
+      </span>
+    </a>
+
+    <div class="nav-links hidden lg:flex">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+      <a routerLink="/habitaciones" routerLinkActive="active">Habitaciones</a>
+      <a routerLink="/restaurante" routerLinkActive="active">Restaurante</a>
+      <a routerLink="/spa-wellness" routerLinkActive="active">Spa</a>
+      <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
+      @if (isAuthenticated()) {
+        <a routerLink="/subir-voucher" routerLinkActive="active">Voucher</a>
+      }
+    </div>
+
+    <div class="nav-actions hidden lg:flex">
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="temaService.alternarTema()"
+        [attr.aria-label]="temaService.esOscuro() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+      >
+        @if (temaService.esOscuro()) {
+          <i class="pi pi-sun"></i>
+        } @else {
+          <i class="pi pi-moon"></i>
+        }
+      </button>
+
+      @if (!isAuthenticated()) {
+        <a routerLink="/login" class="nav-cta">Se Miembro</a>
+      } @else {
+        <div class="relative">
+          <button type="button" (click)="toggleUserMenu()" class="user-trigger">
+            <span class="user-avatar">{{ currentUser()?.name?.charAt(0) }}</span>
+            <span>{{ currentUser()?.name }}</span>
+            <i class="pi pi-chevron-down" [class.rotate-180]="isUserMenuOpen()"></i>
+          </button>
+
+          @if (isUserMenuOpen()) {
+            <div class="user-menu">
+              <div class="user-menu-head">
+                <strong>{{ currentUser()?.name }}</strong>
+                <span>{{ currentUser()?.email }}</span>
+              </div>
+              @if (isAdmin()) {
+                <a routerLink="/admin/dashboard" (click)="closeUserMenu()">
+                  <i class="pi pi-chart-line"></i>
+                  Panel de Administracion
+                </a>
+              } @else {
+                <a routerLink="/mis-reservas" (click)="closeUserMenu()">
+                  <i class="pi pi-calendar"></i>
+                  Mis Reservas
+                </a>
+              }
+              <button type="button" (click)="logout()">
+                <i class="pi pi-sign-out"></i>
+                Cerrar Sesion
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <button class="mobile-trigger lg:hidden" (click)="toggleMobileMenu()" aria-label="Abrir menu">
+      @if (!isMobileMenuOpen()) {
+        <i class="pi pi-bars"></i>
+      } @else {
+        <i class="pi pi-times"></i>
+      }
+    </button>
+  </div>
+
+  @if (isMobileMenuOpen()) {
+    <div class="mobile-menu lg:hidden">
+      <a routerLink="/" (click)="closeMobileMenu()">Inicio</a>
+      <a routerLink="/habitaciones" (click)="closeMobileMenu()">Habitaciones</a>
+      <a routerLink="/restaurante" (click)="closeMobileMenu()">Restaurante</a>
+      <a routerLink="/spa-wellness" (click)="closeMobileMenu()">Spa & Wellness</a>
+      <a routerLink="/contacto" (click)="closeMobileMenu()">Contacto</a>
+      @if (isAuthenticated()) {
+        <a routerLink="/subir-voucher" (click)="closeMobileMenu()">Subir Voucher</a>
+      }
+
+      <button type="button" (click)="temaService.alternarTema()">
+        @if (temaService.esOscuro()) {
+          <i class="pi pi-sun"></i>
+          Modo Claro
+        } @else {
+          <i class="pi pi-moon"></i>
+          Modo Oscuro
+        }
+      </button>
+
+      @if (!isAuthenticated()) {
+        <a routerLink="/login" (click)="closeMobileMenu()" class="mobile-cta">Se Miembro</a>
+      } @else {
+        @if (isAdmin()) {
+          <a routerLink="/admin/dashboard" (click)="closeMobileMenu()">Panel de Administracion</a>
+        } @else {
+          <a routerLink="/mis-reservas" (click)="closeMobileMenu()">Mis Reservas</a>
+        }
+        <button type="button" class="danger" (click)="logout()">Cerrar Sesion</button>
+      }
+    </div>
+  }
+</nav>

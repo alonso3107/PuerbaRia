@@ -1,0 +1,471 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     SUBIR VOUCHER — PUERBA RIA
+     Stepper en 3 pasos: Reserva → Pago → Evidencia.
+     Estilo editorial con dark mode nativo.
+     ═══════════════════════════════════════════════════════════════════ -->
+<p-toast position="top-right" />
+
+<section class="min-h-screen bg-fondo pt-28 pb-20 px-6 transition-colors duration-500">
+  <div class="max-w-3xl mx-auto">
+
+    <!-- ═══ CABECERA ═══ -->
+    <div class="text-center mb-14 animate-fundido opacity-0"
+         style="animation-delay: 0.1s; animation-fill-mode: forwards;">
+      <div class="w-12 h-px bg-acento dark:bg-acento mx-auto mb-6"></div>
+      <h1 class="text-4xl md:text-5xl text-principal mb-3" 
+          style="font-family: var(--font-editorial);">
+        Confirmar Reserva
+      </h1>
+      <p class="text-secundario text-sm tracking-[0.2em] uppercase font-medium">
+        Suba su comprobante de pago para validar su estancia
+      </p>
+    </div>
+
+    @if (!enviado()) {
+      
+      <!-- ═══ STEPPER INDICADOR ═══ -->
+      <div class="flex items-center justify-center mb-14 animate-revelar opacity-0"
+           style="animation-delay: 0.2s; animation-fill-mode: forwards;">
+        @for (paso of pasos; track paso.numero; let i = $index) {
+          <div class="flex items-center">
+            <!-- Circulo del paso -->
+            <button (click)="irAPaso(paso.numero)"
+                    [disabled]="!puedeIrAPaso(paso.numero)"
+                    class="flex flex-col items-center gap-2 group"
+                    [attr.aria-label]="'Paso ' + paso.numero + ': ' + paso.titulo">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition duration-500 border-2"
+                   [class.bg-acento]="pasoActual() >= paso.numero"
+                   [class.border-acento]="pasoActual() >= paso.numero"
+                   [class.text-white]="pasoActual() >= paso.numero"
+                   [class.border-borde]="pasoActual() < paso.numero"
+                   [class.text-terciario]="pasoActual() < paso.numero"
+                   [class.cursor-pointer]="puedeIrAPaso(paso.numero)"
+                   [class.cursor-not-allowed]="!puedeIrAPaso(paso.numero)"
+                   [class.hover:border-acento]="puedeIrAPaso(paso.numero)"
+                   [style.font-family]="'var(--font-editorial)'">
+                @if (pasoActual() > paso.numero) {
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                } @else {
+                  {{ paso.numero }}
+                }
+              </div>
+              <span class="text-[10px] tracking-[0.2em] uppercase font-medium hidden sm:block"
+                    [class.text-acento]="pasoActual() >= paso.numero"
+                    [class.text-terciario]="pasoActual() < paso.numero">
+                {{ paso.titulo }}
+              </span>
+            </button>
+            <!-- Linea conectora -->
+            @if (i < pasos.length - 1) {
+              <div class="w-12 sm:w-20 h-px mx-2 transition duration-700"
+                   [class.bg-acento]="pasoActual() > paso.numero"
+                   [class.bg-borde]="pasoActual() <= paso.numero"
+                   [class.dark:bg-borde-oscuro]="pasoActual() <= paso.numero">
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- ═══ FORMULARIO EN TARJETA ═══ -->
+      <div class="bg-superficie border border-borde p-8 md:p-12 shadow-xl dark:shadow-xl">
+        
+        <form [formGroup]="formulario" (ngSubmit)="onSubmit()" class="space-y-8">
+          
+          <!-- ══ PASO 1: DATOS DE RESERVA ══ -->
+          @if (pasoActual() === 1) {
+            <div class="animate-deslizar">
+              <div class="flex items-center gap-3 mb-8">
+                <span class="text-3xl text-acento/20 dark:text-acento/20" style="font-family: var(--font-editorial);">01</span>
+                <h2 class="text-xl text-principal tracking-wide" style="font-family: var(--font-editorial);">Datos de la Reserva</h2>
+              </div>
+              
+              <!-- Fila 1: Nombre Completo -->
+              <div class="mb-8">
+                <label for="nombre" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+                  Nombre Completo *
+                </label>
+                <input type="text" id="nombre" formControlName="nombre"
+                       class="w-full bg-transparent border-b border-borde py-3 px-0 
+                              text-principal text-sm
+                              placeholder:text-terciario dark:placeholder:text-texto-terciario
+                              focus:outline-none focus:border-acento dark:focus:border-acento transition-colors duration-500"
+                       placeholder="D. Alonso Flores" />
+                @if (formulario.get('nombre')?.touched && formulario.get('nombre')?.invalid) {
+                  <p class="text-red-400 text-xs mt-2">El nombre es requerido (min. 3 caracteres)</p>
+                }
+              </div>
+
+              <!-- Fila 2: Selector de Habitacion Visual -->
+              <div>
+                <label class="block text-xs tracking-[0.2em] uppercase text-secundario mb-4 font-medium">
+                  Habitacion Reservada *
+                </label>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  @for (room of opcionesHabitacion; track room.valor) {
+                    <button type="button" (click)="formulario.patchValue({habitacion: room.valor})"
+                            class="relative group overflow-hidden border transition-all duration-500 flex items-end h-32 md:h-40 text-left focus:outline-none focus:ring-2 focus:ring-acento/50"
+                            [class.border-acento]="formulario.get('habitacion')?.value === room.valor"
+                            [class.border-borde]="formulario.get('habitacion')?.value !== room.valor"
+                            [style.box-shadow]="formulario.get('habitacion')?.value === room.valor ? '0 8px 30px rgba(196,164,74,0.2)' : 'none'">
+                      
+                      <!-- Imagen de Fondo -->
+                      <div class="absolute inset-0 w-full h-full bg-black">
+                        <img [src]="room.imagen" [alt]="room.etiqueta" 
+                             class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale"
+                             [class.!grayscale-0]="formulario.get('habitacion')?.value === room.valor"
+                             [class.opacity-90]="formulario.get('habitacion')?.value === room.valor"
+                             [class.opacity-40]="formulario.get('habitacion')?.value !== room.valor" />
+                        <!-- Gradiente para legibilidad del texto -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                      </div>
+
+                      <!-- Borde activo interior e Icono de Check -->
+                      @if (formulario.get('habitacion')?.value === room.valor) {
+                        <div class="absolute inset-0 border-[3px] border-acento pointer-events-none"></div>
+                        <div class="absolute top-3 right-3 w-6 h-6 rounded-full bg-acento flex items-center justify-center text-white animate-revelar">
+                          <i class="pi pi-check text-[10px] font-bold"></i>
+                        </div>
+                      }
+
+                      <!-- Contenido Textual -->
+                      <div class="relative z-10 p-4 w-full transform transition-transform duration-500"
+                           [class.translate-y-0]="formulario.get('habitacion')?.value === room.valor"
+                           [class.translate-y-1]="formulario.get('habitacion')?.value !== room.valor">
+                        <h3 class="text-white font-medium text-lg md:text-xl mb-1 leading-tight" style="font-family: var(--font-editorial);">
+                          {{ room.etiqueta }}
+                        </h3>
+                        <p class="text-white/80 text-[10px] tracking-wider uppercase">
+                          {{ room.desc }}
+                        </p>
+                      </div>
+                    </button>
+                  }
+                </div>
+                @if (formulario.get('habitacion')?.touched && formulario.get('habitacion')?.invalid) {
+                  <p class="text-red-400 text-xs mt-3">Debe seleccionar una habitacion para continuar</p>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- ══ PASO 2: DETALLES DEL PAGO ══ -->
+          @if (pasoActual() === 2) {
+            <div class="animate-deslizar">
+              <div class="flex items-center gap-3 mb-8">
+                <span class="text-3xl text-acento/20 dark:text-acento/20" style="font-family: var(--font-editorial);">02</span>
+                <h2 class="text-xl text-principal tracking-wide" style="font-family: var(--font-editorial);">Detalles del Pago</h2>
+              </div>
+
+              <!-- Tipo de comprobante -->
+              <div class="mb-8">
+                <label class="block text-xs tracking-[0.2em] uppercase text-secundario mb-4 font-medium">
+                  Tipo de Comprobante *
+                </label>
+                <div class="grid grid-cols-3 gap-3">
+                  @for (tipo of tiposComprobante; track tipo.valor) {
+                    <button type="button" (click)="formulario.patchValue({tipoComprobante: tipo.valor})"
+                            class="flex flex-col items-center gap-2 py-4 px-2 border-2 transition duration-500"
+                            [class.border-acento]="formulario.get('tipoComprobante')?.value === tipo.valor"
+                            [class.bg-acento-suave]="formulario.get('tipoComprobante')?.value === tipo.valor"
+                            [class.border-borde]="formulario.get('tipoComprobante')?.value !== tipo.valor"
+                            [class.hover:border-acento/40]="formulario.get('tipoComprobante')?.value !== tipo.valor">
+                      <i [class]="tipo.icono + ' text-lg text-acento'"></i>
+                      <span class="text-xs tracking-wider uppercase font-medium"
+                            [class.text-acento]="formulario.get('tipoComprobante')?.value === tipo.valor"
+                            [class.text-secundario]="formulario.get('tipoComprobante')?.value !== tipo.valor">
+                        {{ tipo.etiqueta }}
+                      </span>
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <label for="monto" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+                    Monto Pagado (S/.) *
+                  </label>
+                  <input type="number" id="monto" formControlName="monto"
+                         class="w-full bg-transparent border-b border-borde py-3 px-0 
+                                text-principal text-sm
+                                placeholder:text-terciario dark:placeholder:text-texto-terciario
+                                focus:outline-none focus:border-acento dark:focus:border-acento transition-colors duration-500"
+                         placeholder="0.00" step="0.01" />
+                  @if (formulario.get('monto')?.touched && formulario.get('monto')?.invalid) {
+                    <p class="text-red-400 text-xs mt-2">Ingrese el monto exacto pagado</p>
+                  }
+                </div>
+
+                <div>
+                  <label for="codigo" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+                    Codigo de Operacion *
+                  </label>
+                  <input type="text" id="codigo" formControlName="codigoOperacion"
+                         class="w-full bg-transparent border-b border-borde py-3 px-0 
+                                text-principal text-sm
+                                placeholder:text-terciario dark:placeholder:text-texto-terciario
+                                focus:outline-none focus:border-acento dark:focus:border-acento transition-colors duration-500"
+                         placeholder="000000" />
+                  @if (formulario.get('codigoOperacion')?.touched && formulario.get('codigoOperacion')?.invalid) {
+                    <p class="text-red-400 text-xs mt-2">El codigo es obligatorio (min. 6 digitos)</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Fecha de pago -->
+              <div class="mt-8">
+                <label for="fechaPago" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+                  Fecha del Pago *
+                </label>
+                @if (isBrowser) {
+                  <p-datepicker
+                    inputId="fechaPago"
+                    formControlName="fechaPago"
+                    dateFormat="yy-mm-dd"
+                    [showIcon]="true"
+                    [minDate]="fechaMinima"
+                    appendTo="body"
+                    styleClass="premium-datepicker"
+                    inputStyleClass="premium-datepicker-input"
+                  />
+                } @else {
+                  <input
+                    type="text"
+                    id="fechaPago"
+                    class="w-full bg-transparent border-b border-borde py-3 px-0 text-principal text-sm"
+                    readonly
+                  />
+                }
+                @if (formulario.get('fechaPago')?.touched && formulario.get('fechaPago')?.invalid) {
+                  <p class="text-red-400 text-xs mt-2">Seleccione la fecha del pago</p>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- ══ PASO 3: EVIDENCIA ══ -->
+          @if (pasoActual() === 3) {
+            <div class="animate-deslizar">
+              <div class="flex items-center gap-3 mb-8">
+                <span class="text-3xl text-acento/20 dark:text-acento/20" style="font-family: var(--font-editorial);">03</span>
+                <h2 class="text-xl text-principal tracking-wide" style="font-family: var(--font-editorial);">Comprobante y Contacto</h2>
+              </div>
+
+              <!-- Celular Yape -->
+              <div class="mb-8">
+                <label for="celular" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+                  Celular Yape *
+                </label>
+                <input type="tel" id="celular" formControlName="celular"
+                       class="w-full bg-transparent border-b border-borde py-3 px-0 
+                              text-principal text-sm
+                              placeholder:text-terciario dark:placeholder:text-texto-terciario
+                              focus:outline-none focus:border-acento dark:focus:border-acento transition-colors duration-500"
+                       placeholder="987 654 321" maxlength="9" />
+                @if (formulario.get('celular')?.touched && formulario.get('celular')?.invalid) {
+                  <p class="text-red-400 text-xs mt-2">Ingrese un numero valido de 9 digitos</p>
+                }
+              </div>
+
+              <!-- Drop zone del voucher -->
+              <div class="mb-4">
+                <label class="block text-xs tracking-[0.2em] uppercase text-secundario mb-3 font-medium">
+                  Comprobante de Pago *
+                </label>
+                <div class="relative border-2 border-dashed p-8 text-center cursor-pointer transition duration-500"
+                     [class.border-acento]="arrastrando()"
+                     [class.bg-acento-suave]="arrastrando()"
+                     [class.border-borde]="!arrastrando()"
+                     [class.hover:border-acento/40]="!arrastrando()"
+                     (dragover)="onDragOver($event)"
+                     (dragleave)="onDragLeave($event)"
+                     (drop)="onDrop($event)"
+                     (click)="archivoInput.click()">
+                  
+                  <input type="file" #archivoInput (change)="onArchivoSeleccionado($event)" 
+                         accept=".jpg,.jpeg,.png,.webp,.pdf" class="hidden" />
+
+                  @if (!vistaPrevia()) {
+                    <div class="flex flex-col items-center gap-4">
+                      <div class="w-16 h-16 rounded-full flex items-center justify-center border-2 border-acento/30 dark:border-acento/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-acento dark:text-acento" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                        </svg>
+                      </div>
+                      <div class="text-center">
+                        <p class="text-principal font-medium text-sm">Haga clic o arrastre su voucher</p>
+                        <p class="text-terciario text-xs mt-2 tracking-wider uppercase">JPG, PNG, WEBP o PDF — max 10MB</p>
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="relative">
+                      @if (archivoSeleccionado()?.type !== 'application/pdf') {
+                        <img [src]="vistaPrevia()" class="max-h-64 mx-auto object-contain" alt="Vista previa del voucher" />
+                      } @else {
+                        <div class="flex flex-col items-center gap-3 py-8">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-acento dark:text-acento" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                          </svg>
+                          <span class="text-sm text-secundario">{{ archivoSeleccionado()?.name }}</span>
+                        </div>
+                      }
+                      <button type="button" (click)="removerArchivo(); $event.stopPropagation()"
+                              class="absolute top-2 right-2 w-8 h-8 bg-invertido/80 hover:bg-invertido text-white rounded-full flex items-center justify-center transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                </div>
+                @if (formulario.get('voucher')?.touched && formulario.get('voucher')?.invalid) {
+                  <p class="text-red-400 text-xs mt-2 text-center">Debe adjuntar una imagen del comprobante</p>
+                }
+              </div>
+
+              <!-- Términos y Condiciones -->
+              <div class="mt-8 flex items-start gap-3 animate-fundido">
+                <input type="checkbox" id="aceptaTerminos" formControlName="aceptaTerminos"
+                       class="mt-1 w-4 h-4 text-acento bg-transparent border-borde rounded focus:ring-acento cursor-pointer appearance-none checked:bg-acento checked:border-acento border-2 transition-colors relative
+                              after:content-[''] after:absolute after:hidden checked:after:block after:left-1 after:top-[2px] after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45" />
+                <label for="aceptaTerminos" class="text-sm text-secundario cursor-pointer leading-relaxed flex-1">
+                  He leido y acepto los 
+                  <button type="button" (click)="terminosVisible.set(true)" class="text-acento dark:text-acento hover:underline font-medium focus:outline-none focus:ring-2 focus:ring-acento/50 rounded px-1">
+                    Terminos y Condiciones
+                  </button> 
+                  del proceso de reserva del hotel Puerba Ria. *
+                </label>
+              </div>
+              @if (formulario.get('aceptaTerminos')?.touched && formulario.get('aceptaTerminos')?.invalid) {
+                <p class="text-red-400 text-xs mt-2 pl-7">Debe aceptar los terminos y condiciones para continuar.</p>
+              }
+            </div>
+          }
+
+          
+          <!-- Mensaje de error del backend -->
+          @if (mensajeError()) {
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 px-4 py-3 text-sm text-red-600 dark:text-red-400 animate-fundido">
+              {{ mensajeError() }}
+            </div>
+          }
+
+          <!-- ═══ BOTONES DE NAVEGACION ═══ -->
+          <div class="flex justify-between pt-6 border-t border-borde">
+            @if (pasoActual() > 1) {
+              <button type="button" (click)="pasoAnterior()"
+                      class="boton-espectral !text-xs">
+                Anterior
+              </button>
+            } @else {
+              <div></div>
+            }
+
+            @if (pasoActual() < 3) {
+              <button type="button" (click)="pasoSiguiente()"
+                      class="boton-primario !text-xs">
+                Siguiente
+              </button>
+            }
+            @if (pasoActual() === 3) {
+              <button type="submit" [disabled]="cargando()"
+                      class="boton-primario !text-xs">
+                @if (cargando()) {
+                  <span class="flex items-center gap-2">
+                    <svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    Enviando...
+                  </span>
+                } @else {
+                  Enviar Voucher
+                }
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+
+    } @else {
+      <!-- ═══ EXITO ═══ -->
+      <div class="bg-superficie border border-borde p-12 md:p-16 text-center shadow-xl animate-revelar">
+        <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 bg-green-50 dark:bg-green-900/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h2 class="text-3xl md:text-4xl text-principal mb-4" style="font-family: var(--font-editorial);">
+          Voucher Recibido
+        </h2>
+        <p class="text-secundario max-w-md mx-auto mb-10 leading-relaxed">
+          Hemos recibido su comprobante correctamente. Nuestro equipo lo validara en un plazo maximo de 24 horas. 
+          Puede volver a revisar el estado de su comprobante con nuestro equipo de atencion.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a routerLink="/" class="boton-primario !text-xs">Volver al Inicio</a>
+          <button (click)="reiniciar()" class="boton-espectral !text-xs">Subir otro comprobante</button>
+        </div>
+      </div>
+    }
+
+    <!-- Soporte -->
+    <p class="text-center mt-10 text-terciario text-xs tracking-widest uppercase">
+      Necesita ayuda? <a routerLink="/contacto" class="text-acento dark:text-acento hover:underline font-medium">Contacte con soporte</a>
+    </p>
+  </div>
+</section>
+
+<!-- ═══ MODAL TÉRMINOS Y CONDICIONES ═══ -->
+<p-dialog [(visible)]="terminosVisible" [modal]="true" [draggable]="false" [resizable]="false" 
+          header="Términos y Condiciones de Reserva" [style]="{width: '50vw'}" 
+          [breakpoints]="{'960px': '75vw', '640px': '90vw'}"
+          styleClass="bg-superficie border border-borde shadow-2xl"
+          [dismissableMask]="true">
+  
+  <div class="text-secundario text-sm leading-relaxed space-y-4 font-light py-4">
+    <p class="text-principal font-medium mb-2">
+      Al realizar el pago y subir su comprobante, usted acepta las siguientes politicas del Hotel Premium Puerba Ria:
+    </p>
+    
+    <div class="space-y-4">
+      <div class="pl-4 border-l-2 border-acento/30">
+        <h4 class="text-principal font-medium mb-1">1. Confirmación de Reserva</h4>
+        <p>Su reserva quedará confirmada únicamente tras la validación de su pago por nuestro equipo administrativo. Este proceso toma un plazo máximo de 24 horas laborables.</p>
+      </div>
+
+      <div class="pl-4 border-l-2 border-acento/30">
+        <h4 class="text-principal font-medium mb-1">2. Veracidad de Documentos</h4>
+        <p>El comprobante de pago subido debe ser auténtico y legible. La falsificación o alteración de documentos resultará en la cancelación inmediata de la reserva sin derecho a reembolso, además de las acciones legales correspondientes.</p>
+      </div>
+
+      <div class="pl-4 border-l-2 border-acento/30">
+        <h4 class="text-principal font-medium mb-1">3. Políticas de Cancelación</h4>
+        <p>Las cancelaciones realizadas con menos de 48 horas de anticipación a su llegada no serán reembolsables. Cancelaciones previas a este tiempo estarán sujetas a una penalidad del 20% del monto total por gastos administrativos.</p>
+      </div>
+
+      <div class="pl-4 border-l-2 border-acento/30">
+        <h4 class="text-principal font-medium mb-1">4. Ingreso y Salida</h4>
+        <p>El horario de Check-in es a partir de las 15:00 hrs. El Check-out debe realizarse antes de las 12:00 hrs. Exceder el tiempo límite sin autorización previa generará cargos adicionales a la tarifa de un día completo.</p>
+      </div>
+    </div>
+    
+    <p class="pt-6 font-medium italic text-acento text-center">
+      Agradecemos su preferencia y nos comprometemos a brindarle una experiencia inolvidable.
+    </p>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <div class="w-full border-t border-borde pt-4 flex justify-end bg-superficie">
+      <button type="button" (click)="terminosVisible.set(false)" 
+              class="boton-primario !text-xs !py-3 !px-8 flex items-center gap-2">
+        <span>He leído y comprendido</span>
+        <i class="pi pi-check text-[10px]"></i>
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,17 @@
+<div class="w-full h-full relative map-shell">
+  <div #mapContainer class="w-full h-full map-container"></div>
+
+  @if (isLoading()) {
+    <div class="map-state">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Cargando mapa...</span>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="map-state map-state-error">
+      <i class="pi pi-map-marker"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+</div>

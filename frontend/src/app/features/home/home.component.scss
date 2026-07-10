@@ -1,0 +1,55 @@
+@reference "../../../styles.scss";
+
+:host {
+  display: block;
+}
+
+/* Hero — Efecto parallax sutil via listener en TS */
+#hero-imagen {
+  transition: transform 0.1s linear;
+}
+
+/* Hero overlays removed - handled by Tailwind in HTML */
+
+/* Animaciones del hero */
+.animate-fundido {
+  animation: fundido 1.2s ease-out forwards;
+}
+
+/* Experiencias — hover lift */
+.hover\:-translate-y-1:hover {
+  transform: translateY(-4px);
+}
+
+/* Mejora de tipografia editorial en secciones clave */
+.separacion-seccion h2 {
+  letter-spacing: -0.02em;
+}
+
+.experience-reason {
+  background: color-mix(in srgb, var(--color-superficie) 78%, white 22%);
+  border: 1px solid color-mix(in srgb, var(--color-borde) 76%, transparent 24%);
+  min-height: 100%;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+
+  h3 {
+    color: var(--color-texto);
+  }
+
+  p {
+    color: var(--color-texto-suave);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+}
+
+.reserve-cta {
+  /* Removed - handled by Tailwind and HTML */
+}
+
+:host-context(.dark) {
+  .experience-reason {
+    background: color-mix(in srgb, var(--color-superficie) 90%, black 10%);
+  }
+}

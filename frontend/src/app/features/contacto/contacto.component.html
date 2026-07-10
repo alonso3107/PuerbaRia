@@ -1,0 +1,392 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     CONTACTO — PUERBA RIA
+     Formulario de contacto, mapa Mapbox compacto y datos del hotel.
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="pt-[68px]">
+  <!-- ═══ HERO PREMIUM CLEAN ═══ -->
+  <section class="relative w-full h-[50vh] md:h-[65vh] flex flex-col justify-end pb-16 md:pb-24">
+    <!-- Contenedor de la imagen con margen interior (Framed effect) muy sutil en pantallas grandes -->
+    <div class="absolute inset-0 md:p-4 lg:p-6 transition-all duration-700 ease-out z-0">
+      <div class="w-full h-full relative overflow-hidden md:rounded-[2rem] shadow-2xl">
+        <!-- Imagen de fondo -->
+        <img
+          src="assets/hero-contacto.jpg"
+          alt="Vista del hotel Puerba Ria"
+          class="w-full h-full object-cover transition-transform duration-[3000ms] ease-out hover:scale-100 scale-105"
+        />
+        <!-- Overlay sofisticado -->
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+        <!-- Gradiente oscuro inferior sutil para legibilidad -->
+        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent"></div>
+      </div>
+    </div>
+
+    <!-- Contenido Textual -->
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col items-center text-center mt-auto">
+      <!-- Línea decorativa expansiva -->
+      <div class="overflow-hidden mb-8 flex justify-center">
+        <div 
+          class="h-px bg-acento/80 opacity-0 animate-fundido w-12"
+          style="animation-delay: 0.2s; animation-fill-mode: forwards"
+        ></div>
+      </div>
+
+      <!-- Título Principal -->
+      <div class="overflow-hidden">
+        <h1
+          class="text-white text-6xl md:text-8xl tracking-tighter text-balance opacity-0 animate-revelar"
+          style="font-family: var(--font-editorial); animation-delay: 0.4s; animation-fill-mode: forwards;"
+        >
+          Contacto
+        </h1>
+      </div>
+
+      <!-- Subtítulo -->
+      <div class="overflow-hidden mt-6">
+        <p
+          class="text-white/80 text-sm md:text-base tracking-[0.3em] uppercase opacity-0 animate-revelar"
+          style="font-family: var(--font-cuerpo); font-weight: 300; animation-delay: 0.7s; animation-fill-mode: forwards;"
+        >
+          Estaremos encantados de atenderle
+        </p>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator (Design Spell) -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 animate-fundido" style="animation-delay: 1.2s; animation-fill-mode: forwards;">
+      <span class="text-white/50 text-[10px] tracking-widest uppercase font-light">Scroll</span>
+      <div class="w-px h-12 bg-white/20 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full bg-acento animate-scroll-drop"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <section class="separacion-seccion bg-fondo">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-16 xl:gap-24">
+        
+        <!-- ============================== -->
+        <!-- COLUMNA IZQUIERDA: FORMULARIO  -->
+        <!-- ============================== -->
+        <div class="lg:col-span-3" appScrollAnimate animationType="revelar">
+          <div class="mb-12">
+            <span class="text-acento text-sm tracking-widest uppercase mb-3 block font-medium">Escribanos</span>
+            <h2 class="text-principal text-3xl md:text-4xl text-balance" style="font-family: var(--font-editorial);">
+              Cuentenos como podemos ayudarle
+            </h2>
+            <p class="text-secundario mt-4 text-pretty leading-relaxed">
+              Complete el siguiente formulario y nuestro equipo de atencion al cliente se pondra en contacto con usted a la brevedad posible.
+            </p>
+          </div>
+
+          <form [formGroup]="contactoForm" (ngSubmit)="enviarMensaje()" class="space-y-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Nombre -->
+              <div class="relative group">
+                <input
+                  type="text"
+                  formControlName="nombre"
+                  id="nombre"
+                  class="peer w-full bg-transparent border-b py-3 px-0 text-principal focus:outline-none transition-colors duration-300 text-base placeholder-transparent"
+                  [class.border-red-500]="contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched"
+                  [class.border-borde]="!(contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched)"
+                  [class.focus:border-acento]="!(contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched)"
+                  placeholder="Nombre"
+                />
+                <label
+                  for="nombre"
+                  class="absolute left-0 -top-4 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-4 peer-focus:text-xs cursor-text"
+                  [class.text-red-500]="contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched"
+                  [class.text-secundario]="!(contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched)"
+                  [class.peer-placeholder-shown:text-terciario]="!(contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched)"
+                  [class.peer-focus:text-acento]="!(contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched)"
+                >
+                  Nombre completo <span class="text-acento">*</span>
+                </label>
+                @if (contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched) {
+                  <div class="text-red-500 text-xs mt-1 animate-fundido">
+                    @if (contactoForm.get('nombre')?.errors?.['required']) {
+                      El nombre es obligatorio.
+                    } @else if (contactoForm.get('nombre')?.errors?.['minlength']) {
+                      El nombre debe tener al menos 3 caracteres.
+                    } @else if (contactoForm.get('nombre')?.errors?.['pattern']) {
+                      El nombre solo puede contener letras.
+                    }
+                  </div>
+                }
+              </div>
+              
+              <!-- Email -->
+              <div class="relative group">
+                <input
+                  type="email"
+                  formControlName="email"
+                  id="email"
+                  class="peer w-full bg-transparent border-b py-3 px-0 text-principal focus:outline-none transition-colors duration-300 text-base placeholder-transparent"
+                  [class.border-red-500]="contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched"
+                  [class.border-borde]="!(contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched)"
+                  [class.focus:border-acento]="!(contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched)"
+                  placeholder="Email"
+                />
+                <label
+                  for="email"
+                  class="absolute left-0 -top-4 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-4 peer-focus:text-xs cursor-text"
+                  [class.text-red-500]="contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched"
+                  [class.text-secundario]="!(contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched)"
+                  [class.peer-placeholder-shown:text-terciario]="!(contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched)"
+                  [class.peer-focus:text-acento]="!(contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched)"
+                >
+                  Correo electronico <span class="text-acento">*</span>
+                </label>
+                @if (contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched) {
+                  <div class="text-red-500 text-xs mt-1 animate-fundido">
+                    @if (contactoForm.get('email')?.errors?.['required']) {
+                      El correo es obligatorio.
+                    } @else if (contactoForm.get('email')?.errors?.['email']) {
+                      Debe ser un correo válido.
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Asunto -->
+            <div class="relative group">
+              <select
+                formControlName="asunto"
+                class="peer w-full bg-transparent border-b py-3 px-0 text-principal focus:outline-none transition-colors duration-300 text-base appearance-none cursor-pointer"
+                [class.text-terciario]="contactoForm.get('asunto')?.value === ''"
+                [class.border-red-500]="contactoForm.get('asunto')?.invalid && contactoForm.get('asunto')?.touched"
+                [class.border-borde]="!(contactoForm.get('asunto')?.invalid && contactoForm.get('asunto')?.touched)"
+                [class.focus:border-acento]="!(contactoForm.get('asunto')?.invalid && contactoForm.get('asunto')?.touched)"
+              >
+                <option value="" disabled selected class="bg-fondo text-secundario">Seleccione un asunto...</option>
+                @for (asunto of asuntos; track asunto) {
+                  <option [value]="asunto" class="bg-fondo text-principal">{{ asunto }}</option>
+                }
+              </select>
+              <div class="absolute right-0 top-3 pointer-events-none transition-colors"
+                   [class.text-red-500]="contactoForm.get('asunto')?.invalid && contactoForm.get('asunto')?.touched"
+                   [class.text-terciario]="!(contactoForm.get('asunto')?.invalid && contactoForm.get('asunto')?.touched)"
+                   [class.peer-focus:text-acento]="!(contactoForm.get('asunto')?.invalid && contactoForm.get('asunto')?.touched)">
+                <i class="pi pi-chevron-down text-sm"></i>
+              </div>
+              @if (contactoForm.get('asunto')?.invalid && contactoForm.get('asunto')?.touched) {
+                <div class="text-red-500 text-xs mt-1 animate-fundido">
+                  Por favor, seleccione un asunto.
+                </div>
+              }
+            </div>
+
+            <!-- Telefono -->
+            <div class="relative group">
+              <input
+                type="tel"
+                formControlName="telefono"
+                id="telefono"
+                class="peer w-full bg-transparent border-b py-3 px-0 text-principal focus:outline-none transition-colors duration-300 text-base placeholder-transparent"
+                [class.border-red-500]="contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched"
+                [class.border-borde]="!(contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched)"
+                [class.focus:border-acento]="!(contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched)"
+                placeholder="Telefono"
+              />
+              <label
+                for="telefono"
+                class="absolute left-0 -top-4 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-4 peer-focus:text-xs cursor-text"
+                [class.text-red-500]="contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched"
+                [class.text-secundario]="!(contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched)"
+                [class.peer-placeholder-shown:text-terciario]="!(contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched)"
+                [class.peer-focus:text-acento]="!(contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched)"
+              >
+                Telefono (Opcional)
+              </label>
+              @if (contactoForm.get('telefono')?.invalid && contactoForm.get('telefono')?.touched) {
+                <div class="text-red-500 text-xs mt-1 animate-fundido">
+                  Debe ser un número de teléfono válido.
+                </div>
+              }
+            </div>
+
+            <!-- Mensaje -->
+            <div class="relative group pt-4">
+              <textarea
+                formControlName="mensaje"
+                id="mensaje"
+                rows="4"
+                class="peer w-full bg-transparent border-b py-3 px-0 text-principal focus:outline-none transition-colors duration-300 text-base resize-none placeholder-transparent"
+                [class.border-red-500]="contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched"
+                [class.border-borde]="!(contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched)"
+                [class.focus:border-acento]="!(contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched)"
+                placeholder="Mensaje"
+              ></textarea>
+              <label
+                for="mensaje"
+                class="absolute left-0 -top-0 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-0 peer-focus:text-xs cursor-text"
+                [class.text-red-500]="contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched"
+                [class.text-secundario]="!(contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched)"
+                [class.peer-placeholder-shown:text-terciario]="!(contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched)"
+                [class.peer-focus:text-acento]="!(contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched)"
+              >
+                Mensaje <span class="text-acento">*</span>
+              </label>
+              @if (contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched) {
+                <div class="text-red-500 text-xs mt-1 animate-fundido">
+                  @if (contactoForm.get('mensaje')?.errors?.['required']) {
+                    El mensaje es obligatorio.
+                  } @else if (contactoForm.get('mensaje')?.errors?.['minlength']) {
+                    El mensaje es demasiado corto.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Boton Enviar -->
+            <div class="pt-6">
+              <button 
+                type="submit" 
+                [disabled]="enviando()" 
+                class="group relative overflow-hidden bg-invertido text-fondo px-10 py-4 uppercase tracking-widest text-sm font-medium transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto flex items-center justify-center gap-3 hover:shadow-lg active:scale-[0.98]"
+              >
+                <div class="absolute inset-0 bg-acento translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
+                <span class="relative z-10 flex items-center gap-2">
+                  @if (enviando()) {
+                    <i class="pi pi-spin pi-spinner"></i> Enviando...
+                  } @else {
+                    Enviar Consulta <i class="pi pi-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                  }
+                </span>
+              </button>
+
+              @if (enviado()) {
+                <div class="mt-6 flex items-start gap-3 bg-acento/10 text-acento p-4 rounded-lg animate-fundido">
+                  <i class="pi pi-check-circle mt-0.5"></i>
+                  <p class="text-sm font-medium">Su mensaje ha sido enviado exitosamente. Nos comunicaremos con usted a la brevedad.</p>
+                </div>
+              }
+            </div>
+          </form>
+        </div>
+
+        <!-- ============================== -->
+        <!-- COLUMNA DERECHA: INFO + MAPA   -->
+        <!-- ============================== -->
+        <div class="lg:col-span-2 space-y-12" appScrollAnimate animationType="deslizar">
+          
+          <div>
+            <span class="text-acento text-sm tracking-widest uppercase mb-3 block font-medium">Informacion</span>
+            <h2 class="text-principal text-3xl md:text-4xl text-balance mb-8" style="font-family: var(--font-editorial);">
+              Donde encontrarnos
+            </h2>
+
+            <div class="flex flex-col gap-8">
+              <!-- Item -->
+              <div class="flex gap-5 items-start group">
+                <div class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center bg-superficie border border-borde/50 group-hover:bg-acento group-hover:border-acento transition-colors duration-300 shadow-sm">
+                  <i class="pi pi-map-marker text-acento group-hover:text-white transition-colors duration-300"></i>
+                </div>
+                <div class="pt-1">
+                  <h4 class="text-principal text-sm tracking-wider uppercase font-medium mb-1">Direccion</h4>
+                  <p class="text-secundario text-sm leading-relaxed">Av. Ayabaca 345<br/>Ica, Peru</p>
+                </div>
+              </div>
+
+              <!-- Item -->
+              <div class="flex gap-5 items-start group">
+                <div class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center bg-superficie border border-borde/50 group-hover:bg-acento group-hover:border-acento transition-colors duration-300 shadow-sm">
+                  <i class="pi pi-phone text-acento group-hover:text-white transition-colors duration-300"></i>
+                </div>
+                <div class="pt-1">
+                  <h4 class="text-principal text-sm tracking-wider uppercase font-medium mb-1">Linea Directa</h4>
+                  <p class="text-secundario text-sm">+51 950 832 129</p>
+                  <p class="text-terciario text-xs mt-1">Atencion 24/7</p>
+                </div>
+              </div>
+
+              <!-- Item -->
+              <div class="flex gap-5 items-start group">
+                <div class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center bg-superficie border border-borde/50 group-hover:bg-acento group-hover:border-acento transition-colors duration-300 shadow-sm">
+                  <i class="pi pi-envelope text-acento group-hover:text-white transition-colors duration-300"></i>
+                </div>
+                <div class="pt-1">
+                  <h4 class="text-principal text-sm tracking-wider uppercase font-medium mb-1">Correo Electronico</h4>
+                  <p class="text-secundario text-sm">info&commat;puerbaria.com</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Redes Sociales Magnéticas -->
+          <div class="pt-2 border-t border-borde/50">
+            <h4 class="text-principal text-xs tracking-widest uppercase font-medium mb-5">Siganos</h4>
+            <div class="flex gap-4">
+              <a href="#" class="w-10 h-10 rounded-full flex items-center justify-center bg-superficie border border-borde text-secundario hover:text-white hover:bg-acento hover:border-acento hover:-translate-y-1 transition-all duration-300 ease-out shadow-sm" aria-label="Instagram">
+                <i class="pi pi-instagram"></i>
+              </a>
+              <a href="#" class="w-10 h-10 rounded-full flex items-center justify-center bg-superficie border border-borde text-secundario hover:text-white hover:bg-acento hover:border-acento hover:-translate-y-1 transition-all duration-300 ease-out shadow-sm" aria-label="Facebook">
+                <i class="pi pi-facebook"></i>
+              </a>
+              <a href="#" class="w-10 h-10 rounded-full flex items-center justify-center bg-superficie border border-borde text-secundario hover:text-white hover:bg-acento hover:border-acento hover:-translate-y-1 transition-all duration-300 ease-out shadow-sm" aria-label="WhatsApp">
+                <i class="pi pi-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 🗺️ EL MAPA (AHORA COMPACTO Y ELEGANTE AQUÍ) -->
+          <div class="mt-8 w-full aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-borde relative isolate group">
+            <app-map 
+              [coordinates]="hotelCoords" 
+              [popupHTML]="hotelPopupInfo"
+              [zoom]="15"
+              class="w-full h-full block">
+            </app-map>
+            <!-- Capa protectora para no hacer scroll accidental sobre el mapa en móviles -->
+            <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] rounded-3xl z-10"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BENTO BOX: HORARIOS DE ATENCION ═══ -->
+  <section class="py-20 bg-superficie">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-12">
+        <h3 class="text-2xl md:text-3xl text-principal mb-2" style="font-family: var(--font-editorial);">Horarios de Operacion</h3>
+        <p class="text-secundario">Diseñados para brindarle el mejor servicio.</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" appScrollAnimate animationType="revelar">
+        
+        <!-- Tarjeta Recepción -->
+        <div class="bg-fondo rounded-2xl p-8 border border-borde shadow-sm hover:shadow-md transition-shadow duration-300 text-center flex flex-col items-center">
+          <div class="w-12 h-12 rounded-full bg-acento/10 text-acento flex items-center justify-center mb-5">
+            <i class="pi pi-clock text-xl"></i>
+          </div>
+          <h4 class="text-principal text-lg font-medium mb-3" style="font-family: var(--font-editorial)">Recepcion</h4>
+          <p class="text-secundario text-sm mb-4 flex-grow">Abierto 24 horas<br />Check-in: 15:00<br />Check-out: 12:00</p>
+        </div>
+
+        <!-- Tarjeta Conserjería -->
+        <div class="bg-fondo rounded-2xl p-8 border border-borde shadow-sm hover:shadow-md transition-shadow duration-300 text-center flex flex-col items-center">
+          <div class="w-12 h-12 rounded-full bg-acento/10 text-acento flex items-center justify-center mb-5">
+            <i class="pi pi-compass text-xl"></i>
+          </div>
+          <h4 class="text-principal text-lg font-medium mb-3" style="font-family: var(--font-editorial)">Conserjeria</h4>
+          <p class="text-secundario text-sm mb-4 flex-grow">07:00 — 23:00<br />Excursiones, traslados<br />y recomendaciones locales</p>
+        </div>
+
+        <!-- Tarjeta Oficina -->
+        <div class="bg-fondo rounded-2xl p-8 border border-borde shadow-sm hover:shadow-md transition-shadow duration-300 text-center flex flex-col items-center">
+          <div class="w-12 h-12 rounded-full bg-acento/10 text-acento flex items-center justify-center mb-5">
+            <i class="pi pi-briefcase text-xl"></i>
+          </div>
+          <h4 class="text-principal text-lg font-medium mb-3" style="font-family: var(--font-editorial)">Oficina Central</h4>
+          <p class="text-secundario text-sm mb-4 flex-grow">Lun — Vie: 09:00 — 18:00<br />Sab: 09:00 — 13:00<br />Dom: Cerrado</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>

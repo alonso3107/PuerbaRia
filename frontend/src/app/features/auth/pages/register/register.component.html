@@ -1,0 +1,142 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     REGISTER — PUERBA RIA
+     Creacion de cuenta. Diseno premium de tarjeta centralizada.
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="min-h-screen relative flex items-center justify-center px-6 py-24 transition-colors duration-500">
+  
+  <!-- Fondo con imagen desenfocada y overlay -->
+  <div class="absolute inset-0 z-0">
+    <img src="assets/hotel-register.jpg" alt="Fondo exclusivo" class="w-full h-full object-cover opacity-30 dark:opacity-20" />
+    <div class="absolute inset-0 bg-fondo/80 dark:bg-fondo/90 backdrop-blur-sm"></div>
+  </div>
+
+  <!-- Tarjeta central con Glassmorphism -->
+  <div class="relative z-10 w-full max-w-md bg-superficie/90 backdrop-blur-md border border-white/10 dark:border-white/5 shadow-2xl p-10 md:p-14 animate-revelar opacity-0"
+       style="animation-delay: 0.1s; animation-fill-mode: forwards; border-radius: var(--radius-xl);">
+    
+    <!-- Volver -->
+    <a routerLink="/"
+       class="inline-flex items-center text-secundario
+              hover:text-acento dark:hover:text-acento transition-colors mb-10 group text-xs tracking-widest uppercase">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Volver
+    </a>
+
+    <!-- Cabecera editorial -->
+    <div class="text-center mb-10">
+      <div class="w-12 h-px bg-acento dark:bg-acento mx-auto mb-6"></div>
+      <h1 class="text-4xl md:text-5xl text-principal mb-3" 
+          style="font-family: var(--font-editorial);">
+        Crear Cuenta
+      </h1>
+      <p class="text-secundario text-xs tracking-[0.25em] uppercase font-medium">
+        Unase a la Experiencia
+      </p>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-7">
+      
+      <!-- Nombre -->
+      <div>
+        <label for="name" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+          Nombre Completo
+        </label>
+        <input type="text" id="name" formControlName="name"
+               class="w-full bg-transparent border-b border-borde py-3 px-0 
+                      text-principal text-sm
+                      placeholder:text-terciario dark:placeholder:text-texto-terciario
+                      focus:outline-none focus:border-acento dark:focus:border-acento 
+                      transition-colors duration-500"
+               placeholder="Ing. Alonso Flores" />
+        @if (registerForm.get('name')?.touched && registerForm.get('name')?.invalid) {
+          <p class="text-red-400 text-xs mt-2">
+            @if (registerForm.get('name')?.errors?.['required']) { El nombre es requerido. }
+            @if (registerForm.get('name')?.errors?.['minlength']) { Minimo 2 caracteres. }
+          </p>
+        }
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+          Correo Electronico
+        </label>
+        <input type="email" id="email" formControlName="email"
+               class="w-full bg-transparent border-b border-borde py-3 px-0 
+                      text-principal text-sm
+                      placeholder:text-terciario dark:placeholder:text-texto-terciario
+                      focus:outline-none focus:border-acento dark:focus:border-acento 
+                      transition-colors duration-500"
+               placeholder="tu@correo.com" />
+        @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+          <p class="text-red-400 text-xs mt-2">
+            @if (registerForm.get('email')?.errors?.['required']) { El correo es requerido. }
+            @if (registerForm.get('email')?.errors?.['email']) { Ingrese un correo valido. }
+          </p>
+        }
+      </div>
+
+      <!-- Contrasena -->
+      <div>
+        <label for="password" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+          Contrasena
+        </label>
+        <input type="password" id="password" formControlName="password"
+               class="w-full bg-transparent border-b border-borde py-3 px-0 
+                      text-principal text-sm
+                      placeholder:text-terciario dark:placeholder:text-texto-terciario
+                      focus:outline-none focus:border-acento dark:focus:border-acento 
+                      transition-colors duration-500"
+               placeholder="••••••••" />
+        @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+          <p class="text-red-400 text-xs mt-2">
+            @if (registerForm.get('password')?.errors?.['required']) { La contrasena es requerida. }
+            @if (registerForm.get('password')?.errors?.['minlength']) { Minimo 8 caracteres. }
+            @if (registerForm.get('password')?.errors?.['pattern']) { Debe incluir mayuscula, minuscula y numero. }
+          </p>
+        }
+      </div>
+
+      <!-- Mensaje de error -->
+      @if (errorMessage()) {
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Boton -->
+      <div class="pt-4">
+        <button type="submit" [disabled]="isLoading()"
+                class="w-full boton-primario text-center">
+          @if (isLoading()) {
+            <span class="flex items-center justify-center gap-2">
+              <svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Registrando...
+            </span>
+          } @else {
+            Registrarse
+          }
+        </button>
+      </div>
+
+      <!-- Links inferiores -->
+      <div class="text-center space-y-4 pt-2">
+        <p class="text-xs tracking-wider text-terciario pt-4 border-t border-borde">
+          Ya tiene una cuenta?
+          <a routerLink="/login" 
+             class="text-principal hover:text-acento dark:hover:text-acento 
+                    font-medium transition-colors ml-1 uppercase underline decoration-acento/50 underline-offset-4">
+            Inicie Sesion
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</section>

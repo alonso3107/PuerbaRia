@@ -1,0 +1,335 @@
+@import 'tailwindcss';
+@import 'primeicons/primeicons.css';
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
+/* ═══════════════════════════════════════════════════════════════════
+   PALETA CROMATICA — PUERBA RIA
+   Estrategia: una sola variable por token. El valor cambia
+   entre :root y .dark via custom properties. Tailwind genera
+   las utilidades correctamente sin conflictos de !important.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── VALORES BASE (modo claro) ── */
+:root {
+  --color-fondo: #FAF7F2;
+  --color-superficie: #F2EDE4;
+  --color-superficie-alt: #EBE5DA;
+  --color-borde: #D9D0C5;
+  --color-texto: #2D2926;
+  --color-texto-suave: #5C5650;
+  --color-texto-mute: #6B6560;
+  --color-acento: #C4A44A;
+  --color-acento-hover: #A88832;
+  --color-acento-suave: rgba(196, 164, 74, 0.08);
+  --color-invertido: #1A1816;
+
+  /* ── Tipografia ── */
+  --font-editorial: 'Cormorant Garamond', 'Instrument Serif', serif;
+  --font-cuerpo: 'Work Sans', sans-serif;
+  --font-heading: 'Cormorant Garamond', 'Instrument Serif', serif;
+  --font-body: 'Work Sans', sans-serif;
+}
+
+/* ── VALORES MODO OSCURO ── */
+.dark {
+  --color-fondo: #1A1816;
+  --color-superficie: #252220;
+  --color-superficie-alt: #302D2A;
+  --color-borde: #3D3935;
+  --color-texto: #E8E4DE;
+  --color-texto-suave: #B5AFA7;
+  --color-texto-mute: #9A948E;
+  --color-acento: #D9C06E;
+  --color-acento-hover: #C4A44A;
+  --color-acento-suave: rgba(217, 192, 110, 0.08);
+  --color-invertido: #FCFAF7;
+}
+
+/* ── REGISTRAR EN @theme para que Tailwind genere utilidades ── */
+@theme {
+  --color-fondo: var(--color-fondo);
+  --color-superficie: var(--color-superficie);
+  --color-superficie-alt: var(--color-superficie-alt);
+  --color-borde: var(--color-borde);
+  --color-texto: var(--color-texto);
+  --color-texto-suave: var(--color-texto-suave);
+  --color-texto-mute: var(--color-texto-mute);
+  --color-acento: var(--color-acento);
+  --color-acento-hover: var(--color-acento-hover);
+  --color-acento-suave: var(--color-acento-suave);
+  --color-invertido: var(--color-invertido);
+
+  
+  /* ── Aliases (nombres semanticos → variable unificada) ── */
+  --color-texto-principal: var(--color-texto);
+  --color-texto-secundario: var(--color-texto-suave);
+  --color-texto-terciario: var(--color-texto-mute);
+  --color-acento-oscuro-real: var(--color-acento);
+  --color-acento-claro-real: var(--color-acento-hover);
+  --color-texto-principal-oscuro: var(--color-texto);
+  --color-texto-secundario-oscuro: var(--color-texto-suave);
+  --color-texto-terciario-oscuro: var(--color-texto-mute);
+  --color-fondo-oscuro: var(--color-fondo);
+  --color-superficie-oscuro: var(--color-superficie);
+  --color-borde-oscuro: var(--color-borde);
+
+
+  /* ── Legacy (compatibilidad con paginas no refactorizadas) ── */
+  --color-dark: var(--color-texto);
+  --color-dark-light: var(--color-texto-suave);
+  --color-gold: var(--color-acento);
+  --color-gold-dark: var(--color-acento-hover);
+  --color-cream: #FCFAF7;
+  --color-beige: #FAF7F2;
+  --color-beige-dark: #F2EDE4;
+  --color-overlay: rgba(45, 41, 38, 0.55);
+  --color-overlay-light: rgba(45, 41, 38, 0.25);
+
+  /* ── Tipografia ── */
+  --font-editorial: 'Cormorant Garamond', 'Instrument Serif', serif;
+  --font-cuerpo: 'Work Sans', sans-serif;
+  --font-heading: 'Cormorant Garamond', 'Instrument Serif', serif;
+  --font-body: 'Work Sans', sans-serif;
+
+  /* ── Animaciones ── */
+  --animate-revelar: revelar 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-revelar-arriba: revelarArriba 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-deslizar: deslizar 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fundido: fundido 1.2s ease-out forwards;
+  --animate-flotar: flotar 4s ease-in-out infinite;
+  --animate-scroll-drop: scrollDrop 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   KEYFRAMES
+   ═══════════════════════════════════════════════════════════════════ */
+@keyframes revelar {
+  from { opacity: 0; transform: translateY(60px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes revelarArriba {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes deslizar {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fundido {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes scrollDrop {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════════ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-cuerpo);
+  font-weight: 300;
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: color 0.4s ease, background-color 0.4s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background-color: var(--color-acento);
+  color: #fff;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-acento); }
+
+
+/* ── Date input moderno ── */
+input[type="date"] {
+  color-scheme: light;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+input[type="date"]:hover::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}
+.dark input[type="date"] {
+  color-scheme: dark;
+}
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+}
+
+/* ── Linea decorativa ── */
+.linea-dorada {
+  @apply w-12 md:w-16 h-px mx-auto;
+  background: var(--color-acento);
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ANIMACIONES SCROLL
+   ═══════════════════════════════════════════════════════════════════ */
+.scroll-oculto { opacity: 0; }
+.scroll-animate-revelar       { animation: var(--animate-revelar); }
+.scroll-animate-revelarArriba { animation: var(--animate-revelar-arriba); }
+.scroll-animate-deslizar      { animation: var(--animate-deslizar); }
+.scroll-animate-fundido       { animation: var(--animate-fundido); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TRANSICION GLOBAL (solo en elementos estructurales, NO en inputs)
+   ═══════════════════════════════════════════════════════════════════ */
+section, div, nav, footer, header, main, aside, article,
+h1, h2, h3, h4, h5, h6, p, span, a, button:not(input):not(textarea):not(select) {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+[class*="scroll-animate"] { transition-property: none; }
+
+/* Filtro en imagenes para modo oscuro */
+.dark img:not(.sin-filtro) {
+  filter: brightness(0.85);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PRIMENG — Integracion visual Puerba Ria
+   ═══════════════════════════════════════════════════════════════════ */
+.premium-datepicker {
+  width: 100%;
+}
+
+.premium-datepicker .p-inputtext,
+.premium-datepicker-input {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--color-borde) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--color-texto) !important;
+  font-family: var(--font-cuerpo) !important;
+  font-size: 0.875rem !important;
+  padding: 0.85rem 0 !important;
+  width: 100%;
+}
+
+.premium-datepicker .p-inputtext:enabled:focus,
+.premium-datepicker-input:enabled:focus {
+  border-color: var(--color-acento) !important;
+  box-shadow: none !important;
+}
+
+.premium-datepicker .p-datepicker-dropdown {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--color-borde) !important;
+  border-radius: 0 !important;
+  color: var(--color-acento) !important;
+}
+
+.p-datepicker-panel,
+.p-toast-message {
+  border-radius: 0 !important;
+}
+
+.p-datepicker-panel {
+  border-color: var(--color-borde) !important;
+  box-shadow: 0 24px 70px rgba(45, 41, 38, 0.18) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOTONES
+   ═══════════════════════════════════════════════════════════════════ */
+.boton-primario {
+  @apply inline-block px-10 py-4 font-medium text-sm tracking-[0.2em] uppercase
+         transition-all duration-500 cursor-pointer text-white;
+  background: var(--color-acento);
+  border: 1px solid var(--color-acento);
+}
+.boton-primario:hover {
+  background: var(--color-acento-hover);
+  border-color: var(--color-acento-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px -8px rgba(196, 164, 74, 0.2);
+}
+
+.boton-espectral {
+  @apply inline-block px-10 py-4 font-medium text-sm tracking-[0.2em] uppercase
+         transition-all duration-500 cursor-pointer bg-transparent;
+  border: 1px solid var(--color-texto);
+  color: var(--color-texto);
+}
+.boton-espectral:hover {
+  background: var(--color-texto);
+  color: var(--color-fondo);
+  transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   UTILIDADES EDITORIALES
+   ═══════════════════════════════════════════════════════════════════ */
+.separacion-seccion {
+  @apply py-20 md:py-28 lg:py-36;
+}
+
+.titulo-seccion {
+  @apply text-3xl md:text-4xl lg:text-5xl mb-6 leading-[1.15];
+  font-family: var(--font-editorial);
+}
+
+.subtitulo-seccion {
+  @apply text-sm md:text-base tracking-[0.25em] uppercase mb-4;
+  color: var(--color-acento);
+  font-family: var(--font-cuerpo);
+  font-weight: 500;
+}
+
+.texto-editorial {
+  @apply text-base md:text-lg leading-relaxed max-w-2xl mx-auto;
+  color: var(--color-texto-suave);
+}
+
+.text-principal {
+  color: var(--color-texto);
+}
+
+.text-secundario {
+  color: var(--color-texto-suave);
+}
+
+.text-terciario {
+  color: var(--color-texto-mute);
+}
+
+.borde-suave {
+  border-color: var(--color-borde);
+}

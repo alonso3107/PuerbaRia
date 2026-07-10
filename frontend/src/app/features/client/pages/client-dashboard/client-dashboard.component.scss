@@ -1,0 +1,182 @@
+.client-dashboard-container {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-superficie) 54%, transparent 46%) 0%,
+      transparent 24rem
+    ),
+    var(--color-fondo);
+  color: var(--color-texto);
+  padding: clamp(8rem, 12vw, 9.25rem) clamp(1rem, 4vw, 2.5rem) clamp(3rem, 7vw, 5rem);
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.dashboard-header {
+  align-items: end;
+  border-bottom: 1px solid var(--color-borde);
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-bottom: clamp(1.25rem, 3vw, 1.75rem);
+
+  .title {
+    color: var(--color-texto);
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 6vw, 4.6rem);
+    font-weight: 400;
+    line-height: 0.95;
+    margin: 0;
+  }
+
+  .subtitle {
+    color: var(--color-texto-suave);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.7;
+    margin: 0.75rem 0 0;
+    max-width: 34rem;
+  }
+}
+
+.dashboard-card {
+  background: color-mix(in srgb, var(--color-superficie) 88%, white 12%);
+  border: 1px solid color-mix(in srgb, var(--color-borde) 82%, transparent 18%);
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(45, 41, 38, 0.09);
+  overflow: hidden;
+  padding: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+::ng-deep .p-datatable-premium {
+  border-radius: 6px;
+  overflow: hidden;
+  background: transparent !important;
+
+  .p-datatable-wrapper {
+    border-radius: 6px;
+    background: transparent !important;
+  }
+
+  table {
+    background: transparent !important;
+  }
+
+  .p-datatable-header {
+    background: transparent !important;
+    border: none;
+    padding: 1rem 0;
+  }
+  
+  .p-datatable-thead > tr > th {
+    background: color-mix(in srgb, var(--color-acento) 8%, transparent) !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+    color: var(--color-texto) !important;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    padding: 1rem;
+    text-transform: uppercase;
+  }
+
+  .p-datatable-tbody > tr {
+    background: transparent !important;
+    color: var(--color-texto) !important;
+    transition: background-color 0.2s ease;
+  }
+
+  .p-datatable-tbody > tr:nth-child(even) {
+    background: color-mix(in srgb, var(--color-superficie) 50%, transparent) !important;
+  }
+
+  .p-datatable-tbody > tr > td {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-borde) 50%, transparent) !important;
+    border-top: none !important;
+    color: var(--color-texto) !important;
+    padding: 1rem;
+    background: transparent !important;
+  }
+
+  /* PrimeNG hover row override */
+  &.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover,
+  .table-row-hover:hover {
+    background-color: var(--color-acento-suave) !important;
+  }
+
+  .p-paginator {
+    background: transparent !important;
+    border: 0 !important;
+    color: var(--color-texto-suave) !important;
+    padding: 1rem 0 0;
+  }
+}
+
+.text-accent {
+  color: var(--color-acento);
+}
+
+.codigo-chip {
+  background: color-mix(in srgb, var(--color-fondo) 84%, var(--color-acento) 16%);
+  border: 1px solid color-mix(in srgb, var(--color-borde) 76%, transparent 24%);
+  border-radius: 6px;
+  color: var(--color-texto-suave);
+  display: inline-flex;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 0.45rem 0.6rem;
+}
+
+.empty-state {
+  color: var(--color-texto-suave);
+  padding: 4rem 0 !important;
+  text-align: center;
+  
+  .empty-icon {
+    color: var(--color-acento);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+}
+
+:host-context(.dark) {
+  .dashboard-card {
+    background: color-mix(in srgb, var(--color-superficie) 90%, black 10%);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  }
+}
+
+@media (max-width: 700px) {
+  .client-dashboard-container {
+    padding-top: 8.25rem;
+  }
+
+  .dashboard-header {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .dashboard-card {
+    margin-inline: -0.25rem;
+  }
+}
+
+/* Design Spells - Microinteractions */
+.magic-entrance {
+  animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

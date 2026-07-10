@@ -1,0 +1,115 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     LOGIN — PUERBA RIA
+     Acceso a cuenta exclusiva. Estilo editorial con dark mode nativo.
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="min-h-screen relative flex items-center justify-center px-6 py-24 transition-colors duration-500 overflow-hidden">
+  
+  <!-- Premium Background Image -->
+  <div class="absolute inset-0 z-0">
+    <img src="assets/hotel-heroreal.jpg" alt="Fondo" class="w-full h-full object-cover scale-[1.02]" fetchpriority="high" loading="eager" />
+    <div class="absolute inset-0 bg-fondo/80 backdrop-blur-sm"></div>
+  </div>
+
+  <!-- Tarjeta central con Glassmorphism -->
+  <div class="relative z-10 w-full max-w-md bg-superficie/90 backdrop-blur-md border border-white/10 dark:border-white/5 shadow-2xl p-10 md:p-14 animate-revelar opacity-0"
+       style="animation-delay: 0.1s; animation-fill-mode: forwards; border-radius: var(--radius-xl);">
+    
+    <!-- Cabecera editorial -->
+    <div class="text-center mb-12">
+      <div class="w-12 h-px bg-acento dark:bg-acento mx-auto mb-6"></div>
+      <h1 class="text-4xl md:text-5xl text-principal mb-3" 
+          style="font-family: var(--font-editorial);">
+        Se Miembro
+      </h1>
+      <p class="text-secundario text-xs tracking-[0.25em] uppercase font-medium">
+        Acceda a su cuenta exclusiva
+      </p>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-7">
+      
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+          Correo Electronico
+        </label>
+        <input type="email" id="email" formControlName="email"
+               class="w-full bg-transparent border-b border-borde py-3 px-0 
+                      text-principal text-sm
+                      placeholder:text-terciario dark:placeholder:text-texto-terciario
+                      focus:outline-none focus:border-acento dark:focus:border-acento 
+                      transition-colors duration-500"
+               placeholder="tu@correo.com" />
+        @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+          <p class="text-red-400 text-xs mt-2">
+            @if (loginForm.get('email')?.errors?.['required']) { El correo es requerido. }
+            @if (loginForm.get('email')?.errors?.['email']) { Ingrese un correo valido. }
+          </p>
+        }
+      </div>
+
+      <!-- Contrasena -->
+      <div>
+        <label for="password" class="block text-xs tracking-[0.2em] uppercase text-secundario mb-2 font-medium">
+          Contrasena
+        </label>
+        <input type="password" id="password" formControlName="password"
+               class="w-full bg-transparent border-b border-borde py-3 px-0 
+                      text-principal text-sm
+                      placeholder:text-terciario dark:placeholder:text-texto-terciario
+                      focus:outline-none focus:border-acento dark:focus:border-acento 
+                      transition-colors duration-500"
+               placeholder="••••••••" />
+        @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+          <p class="text-red-400 text-xs mt-2">
+            @if (loginForm.get('password')?.errors?.['required']) { La contrasena es requerida. }
+            @if (loginForm.get('password')?.errors?.['minlength']) { Minimo 8 caracteres. }
+            @if (loginForm.get('password')?.errors?.['pattern']) { Debe incluir mayuscula, minuscula y numero. }
+          </p>
+        }
+      </div>
+
+      <!-- Mensaje de error -->
+      @if (errorMessage()) {
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Boton -->
+      <div class="pt-4">
+        <button type="submit" [disabled]="isLoading()"
+                class="w-full boton-primario text-center">
+          @if (isLoading()) {
+            <span class="flex items-center justify-center gap-2">
+              <svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Ingresando...
+            </span>
+          } @else {
+            Iniciar Sesion
+          }
+        </button>
+      </div>
+
+      <!-- Links inferiores -->
+      <div class="text-center space-y-4 pt-2">
+        <a href="#" class="text-xs tracking-wider text-secundario 
+                         hover:text-acento dark:hover:text-acento transition-colors">
+          Olvido su contrasena?
+        </a>
+        <p class="text-xs tracking-wider text-terciario pt-4 border-t border-borde">
+          No tiene una cuenta?
+          <a routerLink="/register" 
+             class="text-principal hover:text-acento dark:hover:text-acento 
+                    font-medium transition-colors ml-1 uppercase underline decoration-acento/50 underline-offset-4">
+            Registrese
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</section>

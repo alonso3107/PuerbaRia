@@ -1,0 +1,20 @@
+@reference "../../../styles.scss";
+
+:host {
+  display: block;
+}
+
+/* Estilo de los select y date en dark mode */
+select option {
+  background: var(--color-fondo);
+  color: var(--color-texto-principal);
+}
+.dark select option {
+  background: var(--color-fondo-oscuro);
+  color: var(--color-texto-principal-oscuro);
+}
+
+/* Iconos SVG heredados de los datos */
+::ng-deep .icono-svg path {
+  stroke: currentColor;
+}

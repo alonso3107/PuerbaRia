@@ -1,0 +1,559 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     SPA & WELLNESS — PUERBA RIA
+     Santuario de bienestar: tratamientos, instalaciones,
+     precios y formulario de consulta.
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="pt-[68px]">
+  <!-- ═══ HERO — Imagen completa con recuadro central translúcido ═══ -->
+  <section class="relative w-full h-[80vh] md:h-[90vh] overflow-hidden">
+    <div class="absolute inset-0">
+      <img
+        src="assets/spa-tratamiento.jpg"
+        alt="Tratamiento SPA de lujo en Puerba Ria"
+        class="w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-invertido/50 dark:bg-black/58"></div>
+    </div>
+    <!-- Recuadro central estilo editorial -->
+    <div class="relative z-10 flex items-center justify-center h-full px-6">
+      <div
+        class="text-center max-w-2xl bg-fondo/90 backdrop-blur-md dark:bg-superficie/88 dark:backdrop-blur-lg border border-borde p-12 md:p-16 animate-revelar opacity-0"
+        style="animation-delay: 0.4s; animation-fill-mode: forwards"
+      >
+        <div class="w-12 h-px bg-acento mx-auto mb-6"></div>
+        <span class="subtitulo-seccion">Bienestar & Armonía</span>
+        <h1
+          class="text-5xl md:text-7xl mb-6 text-principal leading-[1.1]"
+          style="font-family: var(--font-editorial)"
+        >
+          SPA &<br />Wellness
+        </h1>
+        <p class="text-secundario text-base md:text-lg leading-relaxed max-w-lg mx-auto mb-8">
+          Un santuario donde la sabiduría ancestral se une con las técnicas más avanzadas para
+          renovar cuerpo, mente y espíritu.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button (click)="desplazarA('tratamientos')" class="boton-primario">
+            Ver Tratamientos
+          </button>
+          <a routerLink="/contacto" class="boton-espectral">Solicitar Información</a>
+        </div>
+      </div>
+    </div>
+    <!-- Scroll indicator -->
+    <button
+      (click)="desplazarA('tratamientos')"
+      class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/60 hover:text-acento transition-colors animate-flotar cursor-pointer"
+      aria-label="Ver tratamientos"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-7 h-7"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="1"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+      </svg>
+    </button>
+  </section>
+  <!-- ═══ TRATAMIENTOS ═══ -->
+  <section id="tratamientos" class="separacion-seccion bg-fondo">
+    <div class="max-w-6xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-16" appScrollAnimate animationType="revelarArriba">
+        <span class="subtitulo-seccion">Nuestros Rituales</span>
+        <h2 class="titulo-seccion">Tratamientos Exclusivos</h2>
+        <div class="linea-dorada"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        @for (tratamiento of tratamientos; track tratamiento.nombre; let i = $index) {
+        <div
+          appScrollAnimate
+          animationType="revelar"
+          [animationDelay]="i * 150"
+          class="group cursor-pointer bg-superficie p-8 md:p-10 transition duration-500 hover:-translate-y-1 border border-transparent hover:border-acento/20"
+        >
+          <!-- Icono -->
+          <div
+            class="w-14 h-14 flex items-center justify-center border border-acento/30 mb-8 transition duration-500 group-hover:border-acento group-hover:bg-acento-suave"
+          >
+            @if (tratamiento.nombre === 'Masaje Balines') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-acento"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            } @else if (tratamiento.nombre === 'Facial Luminosidad') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-acento"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
+              />
+            </svg>
+            } @else if (tratamiento.nombre === 'Circuito Termal') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-acento"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"
+              />
+            </svg>
+            } @else if (tratamiento.nombre === 'Envoltura Corporal') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-acento"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+              />
+            </svg>
+            } @else if (tratamiento.nombre === 'Reflexologia Podal') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-acento"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+              />
+            </svg>
+            } @else if (tratamiento.nombre === 'Masaje Deportivo') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-acento"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.067A3.75 3.75 0 0012 18z"
+              />
+            </svg>
+            }
+          </div>
+          <h3
+            class="text-xl md:text-2xl mb-3 text-principal"
+            style="font-family: var(--font-editorial)"
+          >
+            {{ tratamiento.nombre }}
+          </h3>
+          <p class="text-secundario leading-relaxed mb-6 text-sm">{{ tratamiento.descripcion }}</p>
+          <div class="flex justify-between items-center pt-4 border-t border-borde">
+            <span class="text-acento font-medium">{{ tratamiento.duracion }}</span>
+            <span class="text-principal font-medium" style="font-family: var(--font-editorial)"
+              >€{{ tratamiento.precio }}</span
+            >
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ INSTALACIONES — SPLIT PANEL MAGAZINE ═══ -->
+  <section id="instalaciones" class="overflow-hidden" style="background-color: #1a1816">
+    <div class="flex flex-col md:flex-row md:h-[85vh] md:min-h-[620px]">
+      <!-- ── PANEL IZQUIERDO: contenido ── -->
+      <div
+        class="relative flex flex-col justify-between w-full md:w-[38%] lg:w-[35%] shrink-0 px-8 pt-10 pb-10 md:px-12 md:pt-14 md:pb-12 lg:px-16 lg:pt-16 lg:pb-14 order-2 md:order-1 min-h-[310px]"
+        style="background-color: #1a1816"
+      >
+        <!-- Separador vertical dorado (solo desktop) -->
+        <div
+          class="hidden md:block absolute right-0 top-14 bottom-14 w-px"
+          style="background: var(--color-acento); opacity: 0.18"
+        ></div>
+
+        <!-- Etiqueta de sección -->
+        <span
+          class="text-[11px] tracking-[0.35em] uppercase font-medium"
+          style="color: var(--color-acento); font-family: var(--font-cuerpo)"
+          >Instalaciones</span
+        >
+
+        <!-- Zona de slides de texto -->
+        <div class="relative flex-1 min-h-[180px] overflow-hidden my-6 md:my-0">
+          @for (inst of instalaciones; track inst.nombre; let idx = $index) {
+          <div
+            class="absolute inset-0 flex flex-col justify-center transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            [style.opacity]="indiceInstalacion() === idx ? '1' : '0'"
+            [style.transform]="indiceInstalacion() === idx ? 'translateY(0)' : 'translateY(14px)'"
+            [style.pointer-events]="indiceInstalacion() === idx ? 'auto' : 'none'"
+          >
+            <!-- Número decorativo -->
+            <span
+              class="block leading-none mb-2 select-none"
+              style="
+                font-family: var(--font-editorial);
+                font-size: clamp(5rem, 9vw, 7.5rem);
+                color: var(--color-acento);
+                opacity: 0.13;
+                line-height: 0.9;
+              "
+            >
+              {{ '0' + (idx + 1) }}
+            </span>
+
+            <!-- Título -->
+            <h3
+              class="text-white leading-[1.1] mb-5"
+              style="font-family: var(--font-editorial); font-size: clamp(1.9rem, 3.2vw, 2.9rem)"
+            >
+              {{ inst.nombre }}
+            </h3>
+
+            <!-- Línea dorada separadora -->
+            <div class="w-9 h-px mb-5" style="background: var(--color-acento); opacity: 0.55"></div>
+
+            <!-- Descripción -->
+            <p
+              class="text-sm md:text-base leading-relaxed"
+              style="
+                color: rgba(255, 255, 255, 0.5);
+                font-family: var(--font-cuerpo);
+                font-weight: 300;
+                max-width: 28ch;
+              "
+            >
+              {{ inst.descripcion }}
+            </p>
+          </div>
+          }
+        </div>
+
+        <!-- ── Controles de navegación ── -->
+        <div>
+          <!-- Flechas + contador -->
+          <div class="flex items-center gap-5 mb-4">
+            <button
+              (click)="instalacionAnterior()"
+              class="group text-white/30 hover:text-white transition-colors duration-300"
+              aria-label="Instalación anterior"
+            >
+              <svg
+                class="w-[18px] h-[18px] transition-transform duration-300 group-hover:-translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <span
+              class="text-sm tracking-[0.2em]"
+              style="font-family: var(--font-editorial); color: rgba(255, 255, 255, 0.4)"
+            >
+              {{ '0' + (indiceInstalacion() + 1) }}
+              <span style="color: rgba(255, 255, 255, 0.18); margin: 0 3px">/</span>
+              {{ '0' + instalaciones.length }}
+            </span>
+
+            <button
+              (click)="instalacionSiguiente()"
+              class="group text-white/30 hover:text-white transition-colors duration-300"
+              aria-label="Instalación siguiente"
+            >
+              <svg
+                class="w-[18px] h-[18px] transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Barra de progreso -->
+          <div class="relative h-px w-full" style="background: rgba(255, 255, 255, 0.08)">
+            <div
+              class="absolute top-0 left-0 h-full transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
+              style="background: var(--color-acento)"
+              [style.width]="((indiceInstalacion() + 1) / instalaciones.length * 100) + '%'"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL DERECHO: imagen ── -->
+      <div class="relative w-full md:flex-1 overflow-hidden h-[62vw] md:h-auto order-1 md:order-2">
+        @for (inst of instalaciones; track inst.nombre; let idx = $index) {
+        <img
+          [src]="inst.imagen"
+          [alt]="inst.nombre"
+          class="absolute inset-0 w-full h-full object-cover sin-filtro transition-opacity duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)]"
+          [style.opacity]="indiceInstalacion() === idx ? '1' : '0'"
+        />
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PAQUETES ═══ -->
+  <section class="separacion-seccion bg-fondo">
+    <div class="max-w-5xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-16" appScrollAnimate animationType="revelarArriba">
+        <span class="subtitulo-seccion">Experiencias</span>
+        <h2 class="titulo-seccion">Paquetes Wellness</h2>
+        <div class="linea-dorada"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        @for (paquete of paquetes; track paquete.nombre; let i = $index) {
+        <div
+          appScrollAnimate
+          animationType="revelar"
+          [animationDelay]="i * 150"
+          class="border border-borde p-10 md:p-12 transition duration-500 hover:border-acento/30 bg-superficie"
+        >
+          <span class="text-xs tracking-[0.2em] uppercase text-acento font-medium mb-4 block"
+            >{{ paquete.etiqueta }}</span
+          >
+          <h3
+            class="text-2xl md:text-3xl mb-4 text-principal"
+            style="font-family: var(--font-editorial)"
+          >
+            {{ paquete.nombre }}
+          </h3>
+          <p class="text-secundario leading-relaxed mb-6">{{ paquete.descripcion }}</p>
+          <ul class="space-y-3 mb-8">
+            @for (item of paquete.incluye; track item) {
+            <li class="flex items-start gap-3 text-sm text-secundario">
+              <span class="text-acento mt-1 shrink-0">&#10003;</span>
+              {{ item }}
+            </li>
+            }
+          </ul>
+          <div class="flex justify-between items-center pt-4 border-t border-borde">
+            <span class="text-terciario text-sm">{{ paquete.duracion }}</span>
+            <div class="text-right">
+              <span class="text-2xl text-principal" style="font-family: var(--font-editorial)"
+                >€{{ paquete.precio }}</span
+              >
+              <span class="text-terciario text-sm ml-1">/ persona</span>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FORMULARIO DE CONSULTA ═══ -->
+  <section id="consulta" class="separacion-seccion bg-superficie">
+    <div class="max-w-3xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-12" appScrollAnimate animationType="revelarArriba">
+        <span class="subtitulo-seccion">Información</span>
+        <h2 class="titulo-seccion">Consulte sin compromiso</h2>
+        <div class="linea-dorada"></div>
+        <p class="texto-editorial mt-8">
+          Cuéntenos qué le interesa y nuestro equipo de bienestar le asesorará con la mejor
+          propuesta personalizada.
+        </p>
+      </div>
+
+      <form
+        [formGroup]="consultaForm"
+        (ngSubmit)="enviarConsulta()"
+        appScrollAnimate
+        animationType="revelar"
+        class="space-y-8 bg-fondo p-10 md:p-14 border border-borde"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Nombre -->
+          <div>
+            <label class="block text-sm tracking-wider uppercase text-secundario mb-2 font-medium"
+              >Nombre completo *</label
+            >
+            <input
+              type="text"
+              formControlName="nombre"
+              placeholder="D. Alonso Flores"
+              class="w-full bg-transparent border-b py-3 px-0 text-principal placeholder:text-terciario focus:outline-none transition-colors duration-500 text-sm"
+              [class.border-red-500]="consultaForm.get('nombre')?.invalid && consultaForm.get('nombre')?.touched"
+              [class.border-borde]="!(consultaForm.get('nombre')?.invalid && consultaForm.get('nombre')?.touched)"
+              [class.focus:border-acento]="!(consultaForm.get('nombre')?.invalid && consultaForm.get('nombre')?.touched)"
+            />
+            @if (consultaForm.get('nombre')?.invalid && consultaForm.get('nombre')?.touched) {
+              <div class="text-red-500 text-xs mt-1">
+                @if (consultaForm.get('nombre')?.errors?.['required']) {
+                  El nombre es obligatorio.
+                } @else if (consultaForm.get('nombre')?.errors?.['minlength']) {
+                  El nombre debe tener al menos 3 caracteres.
+                } @else if (consultaForm.get('nombre')?.errors?.['pattern']) {
+                  El nombre solo puede contener letras.
+                }
+              </div>
+            }
+          </div>
+          <!-- Email -->
+          <div>
+            <label class="block text-sm tracking-wider uppercase text-secundario mb-2 font-medium"
+              >Correo electrónico *</label
+            >
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="alonso@gmail.com"
+              class="w-full bg-transparent border-b py-3 px-0 text-principal placeholder:text-terciario focus:outline-none transition-colors duration-500 text-sm"
+              [class.border-red-500]="consultaForm.get('email')?.invalid && consultaForm.get('email')?.touched"
+              [class.border-borde]="!(consultaForm.get('email')?.invalid && consultaForm.get('email')?.touched)"
+              [class.focus:border-acento]="!(consultaForm.get('email')?.invalid && consultaForm.get('email')?.touched)"
+            />
+            @if (consultaForm.get('email')?.invalid && consultaForm.get('email')?.touched) {
+              <div class="text-red-500 text-xs mt-1">
+                @if (consultaForm.get('email')?.errors?.['required']) {
+                  El correo electrónico es obligatorio.
+                } @else if (consultaForm.get('email')?.errors?.['email']) {
+                  Debe ser un correo válido.
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label class="block text-sm tracking-wider uppercase text-secundario mb-2 font-medium"
+            >Teléfono</label
+          >
+          <input
+            type="tel"
+            formControlName="telefono"
+            placeholder="+51 999 888 777"
+            class="w-full bg-transparent border-b py-3 px-0 text-principal placeholder:text-terciario focus:outline-none transition-colors duration-500 text-sm"
+            [class.border-red-500]="consultaForm.get('telefono')?.invalid && consultaForm.get('telefono')?.touched"
+            [class.border-borde]="!(consultaForm.get('telefono')?.invalid && consultaForm.get('telefono')?.touched)"
+            [class.focus:border-acento]="!(consultaForm.get('telefono')?.invalid && consultaForm.get('telefono')?.touched)"
+          />
+          @if (consultaForm.get('telefono')?.invalid && consultaForm.get('telefono')?.touched) {
+            <div class="text-red-500 text-xs mt-1">
+              Debe ser un número de teléfono válido.
+            </div>
+          }
+        </div>
+
+        <!-- Interés -->
+        <div>
+          <label class="block text-sm tracking-wider uppercase text-secundario mb-2 font-medium"
+            >Me interesa *</label
+          >
+          <select
+            formControlName="interes"
+            class="w-full bg-transparent border-b py-3 px-0 text-principal focus:outline-none transition-colors duration-500 text-sm cursor-pointer"
+            [class.border-red-500]="consultaForm.get('interes')?.invalid && consultaForm.get('interes')?.touched"
+            [class.border-borde]="!(consultaForm.get('interes')?.invalid && consultaForm.get('interes')?.touched)"
+            [class.focus:border-acento]="!(consultaForm.get('interes')?.invalid && consultaForm.get('interes')?.touched)"
+          >
+            <option value="" disabled class="bg-fondo text-secundario">
+              Seleccione una opción...
+            </option>
+            @for (opcion of opcionesInteres; track opcion) {
+            <option [value]="opcion" class="bg-fondo text-principal">{{ opcion }}</option>
+            }
+          </select>
+          @if (consultaForm.get('interes')?.invalid && consultaForm.get('interes')?.touched) {
+            <div class="text-red-500 text-xs mt-1">
+              Por favor, seleccione un interés.
+            </div>
+          }
+        </div>
+
+        <!-- Fecha deseada -->
+        <div>
+          <label class="block text-sm tracking-wider uppercase text-secundario mb-2 font-medium"
+            >Fecha deseada (opcional)</label
+          >
+          @if (isBrowser) {
+            <p-datepicker
+              formControlName="fecha"
+              dateFormat="yy-mm-dd"
+              [showIcon]="true"
+              [minDate]="fechaMinima"
+              appendTo="body"
+              styleClass="premium-datepicker"
+              inputStyleClass="premium-datepicker-input"
+            />
+          } @else {
+            <input
+              type="text"
+              class="w-full bg-transparent border-b border-borde py-3 px-0 text-principal focus:outline-none focus:border-acento transition-colors duration-500 text-sm"
+              readonly
+            />
+          }
+        </div>
+
+        <!-- Mensaje -->
+        <div>
+          <label class="block text-sm tracking-wider uppercase text-secundario mb-2 font-medium"
+            >Mensaje o preferencias</label
+          >
+          <textarea
+            formControlName="mensaje"
+            rows="4"
+            placeholder="Cuéntenos sus preferencias, necesidades especiales o cualquier detalle que desee que tengamos en cuenta..."
+            class="w-full bg-transparent border-b border-borde py-3 px-0 text-principal placeholder:text-terciario focus:outline-none focus:border-acento transition-colors duration-500 text-sm resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Botón enviar -->
+        <div class="text-center pt-4">
+          <button type="submit" [disabled]="enviando()" class="boton-primario">
+            @if (enviando()) { Enviando... } @else { Enviar Consulta }
+          </button>
+          @if (enviado()) {
+          <p class="text-acento text-sm mt-4 animate-fundido">
+            &#10003; Su consulta ha sido enviada. Nos pondremos en contacto en menos de 24 horas.
+          </p>
+          }
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
