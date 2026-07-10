@@ -8,6 +8,7 @@ Aplicación web para la gestión de reservas y vouchers de Puerba Ría. Monorepo
 PuerbaRia/
 ├── backend/    # API REST — Java 17, Spring Boot, PostgreSQL, JWT
 ├── frontend/   # SPA/SSR — Angular 21, PrimeNG, Tailwind CSS
+├── bruno/      # Colección de Bruno para probar la API
 └── .zed/       # Tareas y configuración para el editor Zed
 ```
 
@@ -30,6 +31,13 @@ mvnw.cmd spring-boot:run
 - **Zed:** abrir la raíz del repo y lanzar la tarea `Backend: correr (spring-boot:run)` (menú `task: spawn`, atajo `Alt+Shift+T`).
 
 La API queda disponible en `http://localhost:8080`.
+
+> Requiere PostgreSQL corriendo. Si el servicio está detenido, iniciarlo desde una terminal con permisos de administrador: `Start-Service postgresql-x64-18`.
+
+## Documentación y pruebas de la API
+
+- **Swagger UI:** con el backend corriendo, abrir `http://localhost:8080/swagger-ui.html`. Para probar endpoints protegidos, hacer login, copiar el token y pegarlo en el botón **Authorize**.
+- **Bruno:** abrir la app [Bruno](https://www.usebruno.com/), elegir *Open Collection* y seleccionar la carpeta `bruno/` del repo. Elegir el environment `local`, ejecutar **Login** (guarda el token automáticamente) y luego cualquier otro request.
 
 ### Frontend
 
