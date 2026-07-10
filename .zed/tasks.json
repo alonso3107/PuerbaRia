@@ -1,0 +1,43 @@
+// Tareas de Zed para el monorepo (menu: task: spawn / Alt+Shift+T)
+[
+  {
+    "label": "Backend: correr (spring-boot:run)",
+    "command": "cmd /c mvnw.cmd spring-boot:run",
+    "cwd": "$ZED_WORKTREE_ROOT/backend",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always"
+  },
+  {
+    "label": "Backend: tests",
+    "command": "cmd /c mvnw.cmd test",
+    "cwd": "$ZED_WORKTREE_ROOT/backend",
+    "reveal": "always"
+  },
+  {
+    "label": "Backend: compilar",
+    "command": "cmd /c mvnw.cmd compile",
+    "cwd": "$ZED_WORKTREE_ROOT/backend",
+    "reveal": "always"
+  },
+  {
+    "label": "Frontend: dev server (ng serve)",
+    "command": "pnpm start",
+    "cwd": "$ZED_WORKTREE_ROOT/frontend",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always"
+  },
+  {
+    "label": "Frontend: build",
+    "command": "pnpm build",
+    "cwd": "$ZED_WORKTREE_ROOT/frontend",
+    "reveal": "always"
+  },
+  {
+    "label": "Frontend: instalar dependencias",
+    "command": "pnpm install",
+    "cwd": "$ZED_WORKTREE_ROOT/frontend",
+    "reveal": "always"
+  }
+]

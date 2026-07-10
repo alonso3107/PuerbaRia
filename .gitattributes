@@ -1,0 +1,17 @@
+# Normaliza finales de linea automaticamente
+* text=auto
+
+# Scripts que exigen un final de linea especifico
+*.sh text eol=lf
+mvnw text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.jar binary
