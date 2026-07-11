@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { BarraProgresoScrollComponent } from '@shared/components/barra-progreso-scroll/barra-progreso-scroll.component';
 import { ScrollAnimateDirective } from '@shared/directives/scroll-animate.directive';
 
 interface PlatoMenu {
@@ -18,79 +20,87 @@ interface Vino {
   precio: number;
 }
 
-/**
- * COMPONENTE RESTAURANTE — Mare Nostrum
- * Página editorial del restaurante gourmet del hotel.
- */
+interface FotoGaleria {
+  src: string;
+  alt: string;
+  titulo: string;
+}
+
+interface Horario {
+  servicio: string;
+  horas: string;
+}
+
 @Component({
   selector: 'app-restaurante',
   standalone: true,
-  imports: [ScrollAnimateDirective, RouterLink],
+  imports: [DecimalPipe, RouterLink, ScrollAnimateDirective, BarraProgresoScrollComponent],
   templateUrl: './restaurante.component.html',
   styleUrl: './restaurante.component.scss',
 })
 export class RestauranteComponent {
-  /** Menú degustación de ocho tiempos */
+  readonly precioMenu = 320;
+  readonly precioMaridaje = 150;
+
   readonly menuDegustacion: PlatoMenu[] = [
     {
-      nombre: 'Amuse-Bouche',
-      subtitulo: 'Bienvenida del Chef',
-      descripcion: 'Crujiente de alga nori con crema de aguacate y lima, coronado con huevas de trucha y un toque de aceite de cilantro.',
-      maridaje: 'Cava Brut Nature — Recaredo',
+      nombre: 'Bienvenida del Chef',
+      subtitulo: 'Amuse-bouche',
+      descripcion: 'Crocante de maíz chulpe con emulsión de palta, huevas de trucha andina y aceite de cilantro.',
+      maridaje: 'Espumante Brut — Intipalka, Ica',
     },
     {
-      nombre: 'Tartar de Atún Rojo',
-      subtitulo: 'Entrante Frío',
-      descripcion: 'Atún rojo del Estrecho con emulsión de wasabi fresco, gelatina de soja yodada y crujiente de arroz inflado.',
-      maridaje: 'Albariño — Pazo de Señorans',
+      nombre: 'Tiradito de Lenguado',
+      subtitulo: 'Entrante frío',
+      descripcion: 'Lenguado de anzuelo en leche de tigre de ají amarillo, choclo tostado y aceite de albahaca.',
+      maridaje: 'Sauvignon Blanc — Tacama, Ica',
     },
     {
-      nombre: 'Vieira a la Brasa',
-      subtitulo: 'Mar y Tierra',
-      descripcion: 'Vieira gallega marcada a la brasa sobre cremoso de coliflor ahumada, panceta ibérica crujiente y aire de manzana verde.',
-      maridaje: 'Godello — Rafael Palacios',
+      nombre: 'Pulpo a la Brasa',
+      subtitulo: 'Mar y fuego',
+      descripcion: 'Pulpo marcado al carbón sobre cremoso de pallares, chimichurri de aceitunas de Yauca.',
+      maridaje: 'Chardonnay — Intipalka, Ica',
     },
     {
-      nombre: 'Ravioli de Bogavante',
-      subtitulo: 'Pasta Artesanal',
-      descripcion: 'Pasta fresca al azafrán rellena de bogavante azul, en caldo corto de sus cabezas con hierba limón y jengibre.',
-      maridaje: 'Chardonnay — Enate',
+      nombre: 'Ravioli de Camarones',
+      subtitulo: 'Pasta artesanal',
+      descripcion: 'Pasta fresca al azafrán rellena de camarón de río, bisque de sus corales con un toque de rocoto.',
+      maridaje: 'Viognier — Santiago Queirolo, Ica',
     },
     {
-      nombre: 'Lubina Salvaje',
-      subtitulo: 'Pescado Principal',
-      descripcion: 'Lomo de lubina de estero cocinado a baja temperatura sobre fondo de puerros confitados y salsa verde de perejil y alcaparras.',
-      maridaje: 'Verdejo — José Pariente',
+      nombre: 'Corvina Salvaje',
+      subtitulo: 'Pescado principal',
+      descripcion: 'Lomo de corvina a baja temperatura sobre puerros confitados y salsa verde de huacatay.',
+      maridaje: 'Albariño — Pazo de Señorans, Rías Baixas',
     },
     {
-      nombre: 'Pichón de Bresse',
-      subtitulo: 'Carne Principal',
-      descripcion: 'Pechuga de pichón asada al momento con jugo de sus huesos tostados, puré de chirivía trufada y espinacas salteadas.',
-      maridaje: 'Ribera del Duero — Vega Sicilia Valbuena',
+      nombre: 'Asado de Tira 12 Horas',
+      subtitulo: 'Carne principal',
+      descripcion: 'Cocción lenta con jugo de sus huesos tostados, puré de zapallo loche y espinacas salteadas.',
+      maridaje: 'Malbec — Catena Zapata, Mendoza',
     },
     {
-      nombre: 'Selección de Quesos',
-      subtitulo: 'Preludio Dulce',
-      descripcion: 'Cuatro quesos artesanos españoles con membrillo casero, nueces caramelizadas y pan de higo.',
-      maridaje: 'Jerez Amontillado — Lustau',
+      nombre: 'Quesos del Valle',
+      subtitulo: 'Preludio dulce',
+      descripcion: 'Selección de quesos andinos y mediterráneos con membrillo casero, nueces y pan de higo.',
+      maridaje: 'Amontillado — Lustau, Jerez',
     },
     {
-      nombre: 'Cítricos del Mediterráneo',
+      nombre: 'Chocolate de Piura',
       subtitulo: 'Postre',
-      descripcion: 'Esfera de chocolate blanco con corazón líquido de limón y maracuyá, tierra de aceituna negra y helado de yogur de cabra.',
-      maridaje: 'Moscatel — Jorge Ordóñez',
+      descripcion: 'Esfera de chocolate 70 % con corazón líquido de maracuyá, tierra de aceituna y helado de yogur.',
+      maridaje: 'Moscatel de cosecha tardía',
     },
   ];
 
-  /** Carta de vinos selección */
   readonly cartaVinos: Vino[] = [
     {
-      nombre: 'Valbuena 5',
+      nombre: 'Intipalka N°1',
       tipo: 'Tinto',
-      bodega: 'Vega Sicilia',
-      region: 'Ribera del Duero',
-      notaCata: 'Elegante y complejo, con notas a fruta negra madura, cacao y cedro. Taninos sedosos y final largo.',
-      precio: 185,
+      bodega: 'Viñas Queirolo',
+      region: 'Valle de Ica',
+      notaCata: 'Ensamblaje insignia del valle: fruta negra madura, especias dulces y taninos pulidos. Un tinto peruano de guarda.',
+      precio: 190,
     },
     {
       nombre: 'As Sortes',
@@ -98,15 +108,15 @@ export class RestauranteComponent {
       bodega: 'Rafael Palacios',
       region: 'Valdeorras',
       notaCata: 'Godello de viñas viejas con mineralidad atlántica, fruta blanca y un paso untuoso de gran persistencia.',
-      precio: 95,
+      precio: 390,
     },
     {
-      nombre: 'Clos Mogador',
+      nombre: 'Catena Zapata Malbec',
       tipo: 'Tinto',
-      bodega: 'Clos Mogador',
-      region: 'Priorat',
-      notaCata: 'Potente y mineral, con aromas de pizarra, fruta negra confitada y hierbas mediterráneas. Profundo.',
-      precio: 160,
+      bodega: 'Catena Zapata',
+      region: 'Mendoza',
+      notaCata: 'Violetas, ciruela y cacao sobre una estructura elegante. El clásico argentino en su mejor expresión.',
+      precio: 480,
     },
     {
       nombre: 'Recaredo Brut Nature',
@@ -114,20 +124,45 @@ export class RestauranteComponent {
       bodega: 'Recaredo',
       region: 'Penedés',
       notaCata: 'Cava de larga crianza, burbuja fina y cremosa. Notas de fruta blanca, brioche y almendra tostada.',
-      precio: 68,
+      precio: 280,
     },
   ];
 
-  /** Imágenes de la galería */
-  readonly galeriaPlatos: string[] = [
-    'assets/hotel-dining.jpg',
-    'assets/restaurante-terraza.jpg',
-    'assets/restaurante-interior.jpg',
-    'assets/restaurante-plato.jpg',
-    'assets/home-experiencia-spa.jpg',
+  readonly galeriaPlatos: FotoGaleria[] = [
+    {
+      src: 'assets/restaurante/plato-fine-dining.jpg',
+      alt: 'Curado de trucha con brotes frescos servido en la mesa del chef',
+      titulo: 'Curado de trucha, brotes y demi-glace',
+    },
+    {
+      src: 'assets/restaurante-plato.jpg',
+      alt: 'Plato de autor del menú degustación de Mare Nostrum',
+      titulo: 'Del menú degustación',
+    },
+    {
+      src: 'assets/restaurante/plato-marino.jpg',
+      alt: 'Corvina sobre espinacas con salsa de reducción',
+      titulo: 'Corvina, espinacas y su reducción',
+    },
+    {
+      src: 'assets/restaurante-terraza.jpg',
+      alt: 'Terraza del restaurante al atardecer',
+      titulo: 'La terraza al atardecer',
+    },
+    {
+      src: 'assets/restaurante/mesa-elegante.jpg',
+      alt: 'Salón principal de Mare Nostrum con los cerros de la costa al fondo',
+      titulo: 'El salón principal al mediodía',
+    },
   ];
 
-  /** Desplazamiento suave a una sección por ID */
+  readonly horarios: Horario[] = [
+    { servicio: 'Desayuno', horas: '07:00 — 11:00' },
+    { servicio: 'Almuerzo', horas: '13:00 — 15:30' },
+    { servicio: 'Cena', horas: '19:30 — 23:00' },
+    { servicio: 'Bar & Lounge', horas: '17:00 — 01:00' },
+  ];
+
   desplazarA(id: string): void {
     if (typeof document !== 'undefined') {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });

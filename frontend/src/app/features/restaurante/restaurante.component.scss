@@ -3,3 +3,37 @@
 :host {
   display: block;
 }
+
+.foto-galeria .pie-galeria {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 2.5rem 1.25rem 1rem;
+  background: linear-gradient(to top, rgba(26, 24, 22, 0.75), transparent);
+  color: #fff;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.foto-galeria:hover .pie-galeria,
+.foto-galeria:focus-within .pie-galeria {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: none) {
+  .foto-galeria .pie-galeria {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foto-galeria .pie-galeria,
+  .foto-galeria img {
+    transition: none;
+  }
+}
