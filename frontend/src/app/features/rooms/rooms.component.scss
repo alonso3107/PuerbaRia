@@ -4,15 +4,146 @@
   display: block;
 }
 
-/* Transición suave en hover de las tarjetas */
-.grid > div {
-  transition: box-shadow 0.4s ease, transform 0.4s ease;
+.barra-progreso {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-acento);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  z-index: 60;
 }
 
-.grid > div:hover {
+@supports (animation-timeline: scroll()) {
+  .barra-progreso {
+    display: block;
+    animation: progreso-lectura linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes progreso-lectura {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+article {
+  transition: box-shadow 0.4s ease;
+}
+
+article:hover {
   box-shadow: 0 8px 40px -12px rgba(0, 0, 0, 0.08);
 }
 
-.dark .grid > div:hover {
+.dark article:hover {
   box-shadow: 0 8px 40px -12px rgba(0, 0, 0, 0.3);
+}
+
+.carrusel-pista {
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carrusel-pista img {
+  transition: transform 2s ease-out;
+}
+
+.carrusel:hover .carrusel-pista img {
+  transform: scale(1.04);
+}
+
+.carrusel-flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(26, 24, 22, 0.35);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.4s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+.carrusel:hover .carrusel-flecha,
+.carrusel-flecha:focus-visible {
+  opacity: 1;
+}
+
+.carrusel-flecha:hover {
+  background: var(--color-acento);
+  border-color: var(--color-acento);
+}
+
+.carrusel-flecha:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+@media (hover: none) {
+  .carrusel-flecha {
+    opacity: 1;
+  }
+}
+
+.carrusel-punto {
+  width: 1.6rem;
+  height: 2px;
+  padding: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.3s ease, width 0.3s ease;
+}
+
+.carrusel-punto.activo {
+  background: var(--color-acento);
+  width: 2.4rem;
+}
+
+.carrusel-punto:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+.carrusel-contador {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(26, 24, 22, 0.35);
+  backdrop-filter: blur(4px);
+  padding: 0.2rem 0.6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.enlace-discreto {
+  color: var(--color-texto-suave);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-borde);
+  padding-bottom: 0.2rem;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.enlace-discreto:hover {
+  color: var(--color-acento);
+  border-color: var(--color-acento);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carrusel-pista,
+  .carrusel-pista img,
+  .barra-progreso {
+    transition: none;
+  }
+
+  .carrusel:hover .carrusel-pista img {
+    transform: none;
+  }
 }
