@@ -1,5 +1,7 @@
 # PuerbaRia
 
+[![CI](https://github.com/alonso3107/PuerbaRia/actions/workflows/ci.yml/badge.svg)](https://github.com/alonso3107/PuerbaRia/actions/workflows/ci.yml)
+
 Aplicación web para la gestión de reservas y vouchers de Puerba Ría. Monorepo con backend en Spring Boot y frontend en Angular.
 
 ## Estructura
@@ -16,9 +18,17 @@ PuerbaRia/
 
 - Java 17 (JDK)
 - Node.js 20+ y [pnpm](https://pnpm.io/)
-- PostgreSQL local con una base de datos `puerbaria_db` (usuario `postgres`)
+- [Podman](https://podman.io/) (o Docker) para la base de datos local
 
 ## Cómo correr el proyecto
+
+### Base de datos
+
+```bash
+podman compose up -d
+```
+
+Levanta PostgreSQL 18 en `localhost:5432` con la base `puerbaria_db`. Al iniciar el backend, Flyway aplica las migraciones de `backend/src/main/resources/db/migration/` automáticamente. Para detenerla: `podman compose down` (los datos persisten en el volumen `db_data`).
 
 ### Backend
 
@@ -32,7 +42,9 @@ mvnw.cmd spring-boot:run
 
 La API queda disponible en `http://localhost:8080`.
 
-> Requiere PostgreSQL corriendo. Si el servicio está detenido, iniciarlo desde una terminal con permisos de administrador: `Start-Service postgresql-x64-18`.
+### Migraciones de base de datos
+
+El esquema lo gestiona [Flyway](https://flywaydb.org/): cada cambio de esquema es un archivo `V<n>__<descripcion>.sql` en `backend/src/main/resources/db/migration/`. Hibernate corre en modo `validate`, por lo que las entidades y el esquema deben mantenerse alineados a través de migraciones — nunca editar una migración ya aplicada, siempre crear la siguiente versión.
 
 ## Documentación y pruebas de la API
 
