@@ -3,6 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '@core/services/auth.service';
+import { BarraProgresoScrollComponent } from '@shared/components/barra-progreso-scroll/barra-progreso-scroll.component';
 import { ScrollAnimateDirective } from '@shared/directives/scroll-animate.directive';
 
 interface FotoHabitacion {
@@ -34,7 +35,7 @@ interface ServicioIncluido {
 @Component({
   selector: 'app-rooms',
   standalone: true,
-  imports: [DecimalPipe, RouterLink, ScrollAnimateDirective],
+  imports: [DecimalPipe, RouterLink, ScrollAnimateDirective, BarraProgresoScrollComponent],
   templateUrl: './rooms.component.html',
   styleUrl: './rooms.component.scss',
 })
