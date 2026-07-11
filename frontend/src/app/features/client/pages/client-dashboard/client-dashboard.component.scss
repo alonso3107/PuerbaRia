@@ -42,6 +42,95 @@
   }
 }
 
+.resumen-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.resumen-item {
+  background: color-mix(in srgb, var(--color-superficie) 88%, white 12%);
+  border: 1px solid color-mix(in srgb, var(--color-borde) 82%, transparent 18%);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.25rem 1.5rem;
+
+  &.destacado {
+    border-color: color-mix(in srgb, var(--color-acento) 45%, var(--color-borde) 55%);
+  }
+
+  .resumen-valor {
+    color: var(--color-texto);
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    line-height: 1;
+  }
+
+  .resumen-etiqueta {
+    color: var(--color-texto-suave);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}
+
+.estado-error {
+  align-items: center;
+  color: var(--color-texto-suave);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 3.5rem 1rem;
+  text-align: center;
+
+  i {
+    color: #b42318;
+    font-size: 2rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.monto {
+  display: block;
+  font-weight: 600;
+}
+
+.metodo-pago {
+  color: var(--color-texto-suave);
+  display: block;
+  font-size: 0.78rem;
+  margin-top: 0.15rem;
+}
+
+.empty-detalle {
+  font-size: 0.9rem;
+  margin: 0.35rem 0 1.25rem;
+  opacity: 0.8;
+}
+
+.empty-cta {
+  border: 1px solid var(--color-acento);
+  color: var(--color-acento);
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  padding: 0.75rem 1.75rem;
+  text-transform: uppercase;
+  transition: background-color 0.35s ease, color 0.35s ease;
+
+  &:hover {
+    background: var(--color-acento);
+    color: #fff;
+  }
+}
+
 .dashboard-card {
   background: color-mix(in srgb, var(--color-superficie) 88%, white 12%);
   border: 1px solid color-mix(in srgb, var(--color-borde) 82%, transparent 18%);
@@ -158,6 +247,10 @@
   .dashboard-header {
     align-items: start;
     flex-direction: column;
+  }
+
+  .resumen-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .dashboard-card {
