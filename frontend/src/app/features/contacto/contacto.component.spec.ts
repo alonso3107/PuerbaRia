@@ -40,15 +40,21 @@ describe('ContactoComponent', () => {
     expect(component.asuntos.length).toBe(8);
   });
 
+  it('no debería enviar el mensaje si el formulario es inválido', () => {
+    component.enviarMensaje();
+    expect(component.enviando()).toBe(false);
+    expect(component.contactoForm.touched).toBe(true);
+  });
+
   it('debería enviar el mensaje correctamente', () => {
     vi.useFakeTimers();
-    component.contacto = {
+    component.contactoForm.patchValue({
       nombre: 'Cliente Especial',
       email: 'cliente@example.com',
       asunto: 'Reservas y disponibilidad',
       telefono: '999999999',
       mensaje: 'Hola, deseo cotizar una estancia del 15 al 20 de julio.'
-    };
+    });
 
     component.enviarMensaje();
     expect(component.enviando()).toBe(true);
@@ -57,7 +63,7 @@ describe('ContactoComponent', () => {
 
     expect(component.enviando()).toBe(false);
     expect(component.enviado()).toBe(true);
-    expect(component.contacto.nombre).toBe('');
+    expect(component.contactoForm.value.nombre).toBeNull();
 
     vi.advanceTimersByTime(6000);
     expect(component.enviado()).toBe(false);

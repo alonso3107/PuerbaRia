@@ -1,7 +1,26 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { SpaWellnessComponent } from './spa-wellness.component';
+import { CatalogoService, PaqueteSpa, TratamientoSpa } from '@core/services/catalogo.service';
 import { provideRouter } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+
+const tratamientosMock: TratamientoSpa[] = [
+  { id: 1, icono: 'pi-heart', nombre: 'Masaje Balinés', descripcion: 'Descripcion.', duracion: '75 min', precio: 320 },
+  { id: 2, icono: 'pi-star', nombre: 'Facial Luminosidad', descripcion: 'Descripcion.', duracion: '60 min', precio: 280 },
+];
+
+const paquetesMock: PaqueteSpa[] = [
+  {
+    id: 1,
+    etiqueta: 'El más pedido',
+    nombre: 'Escapada Renovadora',
+    descripcion: 'Descripcion.',
+    imagen: 'assets/spa/masaje-aceites.jpg',
+    duracion: '4 horas',
+    precio: 750,
+    incluye: ['Masaje Balinés de 75 minutos'],
+  },
+];
 
 describe('SpaWellnessComponent', () => {
   let component: SpaWellnessComponent;
@@ -21,8 +40,17 @@ describe('SpaWellnessComponent', () => {
     }
 
     await TestBed.configureTestingModule({
-      imports: [SpaWellnessComponent, FormsModule],
-      providers: [provideRouter([])],
+      imports: [SpaWellnessComponent],
+      providers: [
+        provideRouter([]),
+        {
+          provide: CatalogoService,
+          useValue: {
+            getTratamientos: vi.fn().mockReturnValue(of(tratamientosMock)),
+            getPaquetes: vi.fn().mockReturnValue(of(paquetesMock)),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SpaWellnessComponent);
@@ -38,26 +66,15 @@ describe('SpaWellnessComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería tener la lista de tratamientos', () => {
-    expect(component.tratamientos.length).toBe(6);
+  it('debería cargar tratamientos y paquetes desde el catalogo', () => {
+    expect(component.tratamientos().length).toBe(2);
+    expect(component.paquetes().length).toBe(1);
+    expect(component.cargando()).toBe(false);
+    expect(component.errorCarga()).toBe(false);
   });
 
   it('debería tener la lista de instalaciones', () => {
     expect(component.instalaciones.length).toBe(4);
-  });
-
-  it('debería tener la lista de paquetes', () => {
-    expect(component.paquetes.length).toBe(2);
-  });
-
-  it('debería navegar en el carrusel de tratamientos', () => {
-    expect(component.indiceCarrusel()).toBe(0);
-    component.carruselSiguiente();
-    expect(component.indiceCarrusel()).toBe(1);
-    component.carruselAnterior();
-    expect(component.indiceCarrusel()).toBe(0);
-    component.irACarrusel(3);
-    expect(component.indiceCarrusel()).toBe(3);
   });
 
   it('debería navegar en las instalaciones (carrusel magazine)', () => {
@@ -70,8 +87,6 @@ describe('SpaWellnessComponent', () => {
     expect(component.indiceInstalacion()).toBe(component.instalaciones.length - 1);
     component.instalacionSiguiente(); // Debería volver a 0
     expect(component.indiceInstalacion()).toBe(0);
-    component.irAInstalacion(2);
-    expect(component.indiceInstalacion()).toBe(2);
   });
 
   it('debería intentar desplazarse a una sección por ID', () => {
@@ -86,16 +101,22 @@ describe('SpaWellnessComponent', () => {
     getElementSpy.mockRestore();
   });
 
+  it('no debería enviar la consulta si el formulario es inválido', () => {
+    component.enviarConsulta();
+    expect(component.enviando()).toBe(false);
+    expect(component.consultaForm.touched).toBe(true);
+  });
+
   it('debería enviar la consulta correctamente', () => {
     vi.useFakeTimers();
-    component.formulario = {
+    component.consultaForm.setValue({
       nombre: 'Test User',
       email: 'test@example.com',
       telefono: '123456789',
       interes: 'Circuito termal',
       fecha: new Date('2026-06-08'),
-      mensaje: 'Hola, deseo reservar'
-    };
+      mensaje: 'Hola, deseo reservar',
+    });
 
     component.enviarConsulta();
     expect(component.enviando()).toBe(true);
@@ -104,6 +125,6 @@ describe('SpaWellnessComponent', () => {
 
     expect(component.enviando()).toBe(false);
     expect(component.enviado()).toBe(true);
-    expect(component.formulario.nombre).toBe('');
+    expect(component.consultaForm.value.nombre).toBeNull();
   });
 });

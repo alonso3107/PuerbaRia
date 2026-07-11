@@ -119,7 +119,8 @@ describe('UploadVoucherComponent', () => {
     component.formulario.get('codigoOperacion')?.setValue('123456');
     component.formulario.get('fechaPago')?.setValue('2026-06-08');
     component.formulario.get('celular')?.setValue('987654321');
-    
+    component.formulario.get('aceptaTerminos')?.setValue(true);
+
     const file = new File(['image-data'], 'voucher.png', { type: 'image/png' });
     const event = { target: { files: [file] } };
     component.onArchivoSeleccionado(event);
@@ -141,7 +142,8 @@ describe('UploadVoucherComponent', () => {
     component.formulario.get('codigoOperacion')?.setValue('123456');
     component.formulario.get('fechaPago')?.setValue('2026-06-08');
     component.formulario.get('celular')?.setValue('987654321');
-    
+    component.formulario.get('aceptaTerminos')?.setValue(true);
+
     const file = new File(['image-data'], 'voucher.png', { type: 'image/png' });
     const event = { target: { files: [file] } };
     component.onArchivoSeleccionado(event);
