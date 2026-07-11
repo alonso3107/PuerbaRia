@@ -1,0 +1,390 @@
+<p-confirmdialog [style]="{ width: 'min(92vw, 440px)' }" />
+
+<section class="panel-surface">
+  <div class="panel-heading">
+    <div>
+      <p class="panel-kicker">Contenido del hotel</p>
+      <h2>Catalogo de habitaciones y spa</h2>
+    </div>
+
+    <div class="panel-toolbar">
+      <div class="selector-seccion" role="tablist" aria-label="Secciones del catalogo">
+        @for (seccion of secciones; track seccion.valor) {
+          <button
+            type="button"
+            role="tab"
+            [attr.aria-selected]="seccionActiva() === seccion.valor"
+            [class.activo]="seccionActiva() === seccion.valor"
+            (click)="cambiarSeccion(seccion.valor)"
+          >
+            {{ seccion.etiqueta }}
+          </button>
+        }
+      </div>
+
+      @switch (seccionActiva()) {
+        @case ('habitaciones') {
+          <p-button label="Nueva habitacion" icon="pi pi-plus" size="small" (onClick)="nuevaHabitacion()" />
+        }
+        @case ('tratamientos') {
+          <p-button label="Nuevo tratamiento" icon="pi pi-plus" size="small" (onClick)="nuevoTratamiento()" />
+        }
+        @case ('paquetes') {
+          <p-button label="Nuevo paquete" icon="pi pi-plus" size="small" (onClick)="nuevoPaquete()" />
+        }
+      }
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="panel-state">
+      <p-progress-spinner strokeWidth="3" ariaLabel="Cargando catalogo" />
+      <p>Cargando catalogo...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="panel-state error">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>{{ errorMessage() }}</p>
+      <p-button label="Reintentar" severity="secondary" [outlined]="true" (onClick)="cargarCatalogo()" />
+    </div>
+  } @else {
+    @switch (seccionActiva()) {
+      @case ('habitaciones') {
+        <p-table [value]="habitaciones()" [tableStyle]="{ 'min-width': '720px' }" styleClass="p-datatable-sm admin-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Habitacion</th>
+              <th>Precio / noche</th>
+              <th>Capacidad</th>
+              <th>Fotos</th>
+              <th class="text-right">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-habitacion>
+            <tr>
+              <td>
+                <strong>{{ habitacion.nombre }}</strong>
+                <small>{{ habitacion.esencia }}</small>
+              </td>
+              <td><strong>S/ {{ habitacion.precio | number }}</strong></td>
+              <td>{{ habitacion.tamano }} m² · hasta {{ habitacion.capacidad }}</td>
+              <td>{{ habitacion.fotos.length }}</td>
+              <td>
+                <div class="table-actions">
+                  <p-button icon="pi pi-pencil" severity="secondary" [text]="true"
+                            pTooltip="Editar" tooltipPosition="top"
+                            (onClick)="editarHabitacion(habitacion)" />
+                  <p-button icon="pi pi-trash" severity="danger" [text]="true"
+                            pTooltip="Eliminar" tooltipPosition="top"
+                            [loading]="eliminandoId() === habitacion.id"
+                            (onClick)="eliminarHabitacion(habitacion)" />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5">
+                <div class="empty-table">
+                  <i class="pi pi-home"></i>
+                  <p>Aun no hay habitaciones registradas.</p>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+
+      @case ('tratamientos') {
+        <p-table [value]="tratamientos()" [tableStyle]="{ 'min-width': '720px' }" styleClass="p-datatable-sm admin-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Tratamiento</th>
+              <th>Duracion</th>
+              <th>Precio</th>
+              <th class="text-right">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-tratamiento>
+            <tr>
+              <td>
+                <div class="celda-icono">
+                  <i class="pi {{ tratamiento.icono }}" aria-hidden="true"></i>
+                  <div>
+                    <strong>{{ tratamiento.nombre }}</strong>
+                    <small>{{ tratamiento.descripcion }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>{{ tratamiento.duracion }}</td>
+              <td><strong>S/ {{ tratamiento.precio | number }}</strong></td>
+              <td>
+                <div class="table-actions">
+                  <p-button icon="pi pi-pencil" severity="secondary" [text]="true"
+                            pTooltip="Editar" tooltipPosition="top"
+                            (onClick)="editarTratamiento(tratamiento)" />
+                  <p-button icon="pi pi-trash" severity="danger" [text]="true"
+                            pTooltip="Eliminar" tooltipPosition="top"
+                            [loading]="eliminandoId() === tratamiento.id"
+                            (onClick)="eliminarTratamiento(tratamiento)" />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4">
+                <div class="empty-table">
+                  <i class="pi pi-sparkles"></i>
+                  <p>Aun no hay tratamientos registrados.</p>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+
+      @case ('paquetes') {
+        <p-table [value]="paquetes()" [tableStyle]="{ 'min-width': '720px' }" styleClass="p-datatable-sm admin-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Paquete</th>
+              <th>Duracion</th>
+              <th>Incluye</th>
+              <th>Precio</th>
+              <th class="text-right">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-paquete>
+            <tr>
+              <td>
+                <strong>{{ paquete.nombre }}</strong>
+                <small>{{ paquete.etiqueta }}</small>
+              </td>
+              <td>{{ paquete.duracion }}</td>
+              <td>{{ paquete.incluye.length }} beneficios</td>
+              <td><strong>S/ {{ paquete.precio | number }}</strong></td>
+              <td>
+                <div class="table-actions">
+                  <p-button icon="pi pi-pencil" severity="secondary" [text]="true"
+                            pTooltip="Editar" tooltipPosition="top"
+                            (onClick)="editarPaquete(paquete)" />
+                  <p-button icon="pi pi-trash" severity="danger" [text]="true"
+                            pTooltip="Eliminar" tooltipPosition="top"
+                            [loading]="eliminandoId() === paquete.id"
+                            (onClick)="eliminarPaquete(paquete)" />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5">
+                <div class="empty-table">
+                  <i class="pi pi-gift"></i>
+                  <p>Aun no hay paquetes registrados.</p>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    }
+  }
+</section>
+
+<p-dialog
+  [header]="'Habitacion'"
+  [modal]="true"
+  [visible]="habitacionDialogVisible()"
+  [style]="{ width: 'min(94vw, 680px)' }"
+  (visibleChange)="habitacionDialogVisible.set($event)"
+>
+  <form [formGroup]="habitacionForm" (ngSubmit)="guardarHabitacion()" class="formulario-catalogo">
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="hab-nombre">Nombre *</label>
+        <input pInputText id="hab-nombre" formControlName="nombre" placeholder="Suite Océano" />
+      </div>
+      <div class="campo">
+        <label for="hab-precio">Precio por noche (S/) *</label>
+        <p-inputnumber inputId="hab-precio" formControlName="precio" mode="decimal"
+                       [min]="1" [maxFractionDigits]="2" [useGrouping]="false" />
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="hab-esencia">Esencia *</label>
+      <input pInputText id="hab-esencia" formControlName="esencia" placeholder="La suite insignia, frente al Pacífico" />
+    </div>
+
+    <div class="campo">
+      <label for="hab-descripcion">Descripcion *</label>
+      <textarea pTextarea id="hab-descripcion" formControlName="descripcion" rows="4"></textarea>
+    </div>
+
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="hab-tamano">Superficie (m²) *</label>
+        <p-inputnumber inputId="hab-tamano" formControlName="tamano" [min]="1" [useGrouping]="false" />
+      </div>
+      <div class="campo">
+        <label for="hab-capacidad">Capacidad (huespedes) *</label>
+        <p-inputnumber inputId="hab-capacidad" formControlName="capacidad" [min]="1" [useGrouping]="false" />
+      </div>
+    </div>
+
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="hab-cama">Cama *</label>
+        <input pInputText id="hab-cama" formControlName="cama" placeholder="King size" />
+      </div>
+      <div class="campo">
+        <label for="hab-vista">Vista *</label>
+        <input pInputText id="hab-vista" formControlName="vista" placeholder="Mar, frontal" />
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="hab-ideal">Ideal para *</label>
+      <input pInputText id="hab-ideal" formControlName="idealPara" placeholder="Aniversarios y lunas de miel" />
+    </div>
+
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="hab-amenidades">Amenidades (una por linea) *</label>
+        <textarea pTextarea id="hab-amenidades" formControlName="amenidades" rows="5"></textarea>
+      </div>
+      <div class="campo">
+        <label for="hab-condiciones">Condiciones (una por linea) *</label>
+        <textarea pTextarea id="hab-condiciones" formControlName="condiciones" rows="5"></textarea>
+      </div>
+    </div>
+
+    <div class="campo" formArrayName="fotos">
+      <label>Fotos *</label>
+      @for (foto of fotosFormArray.controls; track foto; let f = $index) {
+        <div class="fila-foto" [formGroupName]="f">
+          <input pInputText formControlName="src" placeholder="assets/rooms/foto.jpg" aria-label="Ruta de la foto" />
+          <input pInputText formControlName="alt" placeholder="Descripcion de la foto" aria-label="Texto alternativo" />
+          <p-button icon="pi pi-minus" severity="danger" [text]="true"
+                    [disabled]="fotosFormArray.length === 1"
+                    pTooltip="Quitar foto" (onClick)="quitarFoto(f)" />
+        </div>
+      }
+      <p-button label="Agregar foto" icon="pi pi-plus" severity="secondary" [outlined]="true"
+                size="small" (onClick)="agregarFoto()" />
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true"
+                (onClick)="habitacionDialogVisible.set(false)" />
+      <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="guardando()" />
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog
+  [header]="'Tratamiento de spa'"
+  [modal]="true"
+  [visible]="tratamientoDialogVisible()"
+  [style]="{ width: 'min(94vw, 540px)' }"
+  (visibleChange)="tratamientoDialogVisible.set($event)"
+>
+  <form [formGroup]="tratamientoForm" (ngSubmit)="guardarTratamiento()" class="formulario-catalogo">
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="tra-nombre">Nombre *</label>
+        <input pInputText id="tra-nombre" formControlName="nombre" placeholder="Masaje Balinés" />
+      </div>
+      <div class="campo">
+        <label for="tra-icono">Icono *</label>
+        <p-select inputId="tra-icono" formControlName="icono" [options]="iconosDisponibles" appendTo="body">
+          <ng-template #selectedItem let-icono>
+            <span class="opcion-icono"><i class="pi {{ icono }}" aria-hidden="true"></i> {{ icono }}</span>
+          </ng-template>
+          <ng-template #item let-icono>
+            <span class="opcion-icono"><i class="pi {{ icono }}" aria-hidden="true"></i> {{ icono }}</span>
+          </ng-template>
+        </p-select>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="tra-descripcion">Descripcion *</label>
+      <textarea pTextarea id="tra-descripcion" formControlName="descripcion" rows="4"></textarea>
+    </div>
+
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="tra-duracion">Duracion *</label>
+        <input pInputText id="tra-duracion" formControlName="duracion" placeholder="75 min" />
+      </div>
+      <div class="campo">
+        <label for="tra-precio">Precio (S/) *</label>
+        <p-inputnumber inputId="tra-precio" formControlName="precio" mode="decimal"
+                       [min]="1" [maxFractionDigits]="2" [useGrouping]="false" />
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true"
+                (onClick)="tratamientoDialogVisible.set(false)" />
+      <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="guardando()" />
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog
+  [header]="'Paquete wellness'"
+  [modal]="true"
+  [visible]="paqueteDialogVisible()"
+  [style]="{ width: 'min(94vw, 560px)' }"
+  (visibleChange)="paqueteDialogVisible.set($event)"
+>
+  <form [formGroup]="paqueteForm" (ngSubmit)="guardarPaquete()" class="formulario-catalogo">
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="paq-nombre">Nombre *</label>
+        <input pInputText id="paq-nombre" formControlName="nombre" placeholder="Escapada Renovadora" />
+      </div>
+      <div class="campo">
+        <label for="paq-etiqueta">Etiqueta *</label>
+        <input pInputText id="paq-etiqueta" formControlName="etiqueta" placeholder="El más pedido" />
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="paq-descripcion">Descripcion *</label>
+      <textarea pTextarea id="paq-descripcion" formControlName="descripcion" rows="3"></textarea>
+    </div>
+
+    <div class="campo">
+      <label for="paq-imagen">Imagen *</label>
+      <input pInputText id="paq-imagen" formControlName="imagen" placeholder="assets/spa/masaje-aceites.jpg" />
+    </div>
+
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="paq-duracion">Duracion *</label>
+        <input pInputText id="paq-duracion" formControlName="duracion" placeholder="4 horas" />
+      </div>
+      <div class="campo">
+        <label for="paq-precio">Precio por persona (S/) *</label>
+        <p-inputnumber inputId="paq-precio" formControlName="precio" mode="decimal"
+                       [min]="1" [maxFractionDigits]="2" [useGrouping]="false" />
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="paq-incluye">Incluye (un beneficio por linea) *</label>
+      <textarea pTextarea id="paq-incluye" formControlName="incluye" rows="5"></textarea>
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true"
+                (onClick)="paqueteDialogVisible.set(false)" />
+      <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="guardando()" />
+    </div>
+  </form>
+</p-dialog>
