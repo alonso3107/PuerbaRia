@@ -1,0 +1,31 @@
+meta {
+  name: Crear paquete de spa
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/v1/spa/paquetes
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "etiqueta": "Nuevo",
+    "nombre": "Paquete Prueba",
+    "descripcion": "Descripcion del paquete de prueba.",
+    "imagen": "assets/spa/masaje-aceites.jpg",
+    "duracion": "3 horas",
+    "precio": 500,
+    "incluye": ["Masaje de 60 minutos", "Circuito termal"]
+  }
+}
+
+docs {
+  Requiere sesion de ADMIN. Tambien existen PUT y DELETE en /api/v1/spa/paquetes/{id}.
+}

@@ -1,0 +1,38 @@
+meta {
+  name: Actualizar habitacion
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/api/v1/habitaciones/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "nombre": "Suite Océano",
+    "esencia": "La suite insignia, frente al Pacífico",
+    "descripcion": "Descripcion actualizada de la suite.",
+    "precio": 890,
+    "tamano": 65,
+    "capacidad": 2,
+    "cama": "King size",
+    "vista": "Mar, frontal",
+    "idealPara": "Aniversarios y lunas de miel",
+    "amenidades": ["Terraza privada amueblada", "Servicio de mayordomo"],
+    "condiciones": ["Desayuno incluido"],
+    "fotos": [
+      { "src": "assets/suite-oceano.jpg", "alt": "Dormitorio de la Suite Océano" }
+    ]
+  }
+}
+
+docs {
+  Requiere sesion de ADMIN. Cambiar el 1 de la URL por el id de la habitacion.
+}
