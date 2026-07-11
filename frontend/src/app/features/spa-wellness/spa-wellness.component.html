@@ -56,8 +56,29 @@
         </p>
         <div class="linea-dorada mb-16"></div>
       </div>
+      @if (cargando()) {
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10" aria-hidden="true">
+          @for (marcador of [0, 1, 2]; track marcador) {
+            <div class="bg-superficie p-8 md:p-10 animate-pulse space-y-6">
+              <div class="w-14 h-14 bg-borde/40"></div>
+              <div class="h-6 w-2/3 bg-borde/40"></div>
+              <div class="h-16 bg-borde/20"></div>
+              <div class="h-4 w-full bg-borde/30"></div>
+            </div>
+          }
+        </div>
+        <p class="sr-only" role="status">Cargando tratamientos</p>
+      } @else if (errorCarga()) {
+        <div class="text-center py-16 border border-borde bg-superficie">
+          <p class="text-secundario mb-6">No pudimos cargar los tratamientos en este momento.</p>
+          <button type="button" class="boton-espectral" (click)="cargarCatalogo()">
+            Reintentar
+          </button>
+        </div>
+      }
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-        @for (tratamiento of tratamientos; track tratamiento.nombre; let i = $index) {
+        @for (tratamiento of tratamientos(); track tratamiento.id; let i = $index) {
           <div
             appScrollAnimate
             animationType="revelar"
@@ -177,8 +198,23 @@
         </p>
         <div class="linea-dorada"></div>
       </div>
+      @if (cargando()) {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" aria-hidden="true">
+          @for (marcador of [0, 1]; track marcador) {
+            <div class="border border-borde bg-superficie animate-pulse">
+              <div class="h-52 bg-borde/40"></div>
+              <div class="p-10 md:p-12 space-y-6">
+                <div class="h-8 w-2/3 bg-borde/40"></div>
+                <div class="h-20 bg-borde/20"></div>
+                <div class="h-4 w-1/2 bg-borde/30"></div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        @for (paquete of paquetes; track paquete.nombre; let i = $index) {
+        @for (paquete of paquetes(); track paquete.id; let i = $index) {
           <article
             appScrollAnimate
             animationType="revelar"

@@ -48,7 +48,30 @@
   <section class="separacion-seccion bg-superficie">
     <div class="max-w-7xl mx-auto px-6 md:px-12">
 
-      @for (room of rooms; track room.nombre; let i = $index) {
+      @if (cargando()) {
+        @for (marcador of [0, 1]; track marcador) {
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0 mb-20 bg-fondo border border-borde overflow-hidden animate-pulse"
+               aria-hidden="true">
+            <div class="h-72 md:h-[480px] bg-borde/40"></div>
+            <div class="p-10 md:p-14 space-y-6">
+              <div class="h-8 w-2/3 bg-borde/40"></div>
+              <div class="h-4 w-1/2 bg-borde/30"></div>
+              <div class="h-24 bg-borde/20"></div>
+              <div class="h-4 w-3/4 bg-borde/30"></div>
+            </div>
+          </div>
+        }
+        <p class="sr-only" role="status">Cargando habitaciones</p>
+      } @else if (errorCarga()) {
+        <div class="text-center py-20 border border-borde bg-fondo">
+          <p class="text-secundario mb-6">No pudimos cargar las habitaciones en este momento.</p>
+          <button type="button" class="boton-espectral" (click)="cargarHabitaciones()">
+            Reintentar
+          </button>
+        </div>
+      }
+
+      @for (room of habitaciones(); track room.id; let i = $index) {
         <article appScrollAnimate animationType="revelar" [animationDelay]="i * 100"
                  class="grid grid-cols-1 md:grid-cols-2 gap-0 mb-20 last:mb-0 bg-fondo border border-borde overflow-hidden">
 

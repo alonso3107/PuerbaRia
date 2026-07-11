@@ -1,33 +1,17 @@
-import { Component, PLATFORM_ID, inject, signal } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
+import { forkJoin } from 'rxjs';
+import { CatalogoService, PaqueteSpa, TratamientoSpa } from '@core/services/catalogo.service';
 import { BarraProgresoScrollComponent } from '@shared/components/barra-progreso-scroll/barra-progreso-scroll.component';
 import { ScrollAnimateDirective } from '@shared/directives/scroll-animate.directive';
-
-interface Tratamiento {
-  icono: string;
-  nombre: string;
-  descripcion: string;
-  duracion: string;
-  precio: number;
-}
 
 interface Instalacion {
   nombre: string;
   descripcion: string;
   imagen: string;
-}
-
-interface Paquete {
-  etiqueta: string;
-  nombre: string;
-  descripcion: string;
-  imagen: string;
-  incluye: string[];
-  duracion: string;
-  precio: number;
 }
 
 @Component({
@@ -44,54 +28,15 @@ interface Paquete {
   templateUrl: './spa-wellness.component.html',
   styleUrl: './spa-wellness.component.scss',
 })
-export class SpaWellnessComponent {
+export class SpaWellnessComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly catalogoService = inject(CatalogoService);
   readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  readonly tratamientos: Tratamiento[] = [
-    {
-      icono: 'pi-heart',
-      nombre: 'Masaje Balinés',
-      descripcion: 'Amasamientos profundos, presión en puntos energéticos y estiramientos pasivos con aceites tibios para liberar tensiones crónicas.',
-      duracion: '75 min',
-      precio: 320,
-    },
-    {
-      icono: 'pi-star',
-      nombre: 'Facial Luminosidad',
-      descripcion: 'Tratamiento personalizado con activos marinos y ácido hialurónico. Revitaliza, ilumina y unifica el tono de la piel.',
-      duracion: '60 min',
-      precio: 280,
-    },
-    {
-      icono: 'pi-cloud',
-      nombre: 'Circuito Termal',
-      descripcion: 'Sauna finlandesa, baño turco, ducha de contrastes y piscina climatizada con jets de hidromasaje.',
-      duracion: '90 min',
-      precio: 220,
-    },
-    {
-      icono: 'pi-sparkles',
-      nombre: 'Envoltura Corporal',
-      descripcion: 'Exfoliación con sal de Maras seguida de envoltura de algas marinas y manteca de karité. Piel sedosa y nutrida.',
-      duracion: '60 min',
-      precio: 300,
-    },
-    {
-      icono: 'pi-compass',
-      nombre: 'Reflexología Podal',
-      descripcion: 'Masaje en puntos reflejos de los pies que equilibra el sistema nervioso. Profundamente relajante.',
-      duracion: '45 min',
-      precio: 190,
-    },
-    {
-      icono: 'pi-bolt',
-      nombre: 'Masaje Deportivo',
-      descripcion: 'Técnica intensiva sobre grupos musculares específicos. Ideal tras el surf o para liberar contracturas profundas.',
-      duracion: '60 min',
-      precio: 260,
-    },
-  ];
+  readonly tratamientos = signal<TratamientoSpa[]>([]);
+  readonly paquetes = signal<PaqueteSpa[]>([]);
+  readonly cargando = signal(this.isBrowser);
+  readonly errorCarga = signal(false);
 
   readonly instalaciones: Instalacion[] = [
     {
@@ -113,40 +58,6 @@ export class SpaWellnessComponent {
       nombre: 'Zona de Relax',
       descripcion: 'Hamacas balinesas, infusiones orgánicas y vistas al horizonte del Pacífico.',
       imagen: 'assets/home-experiencia-spa.jpg',
-    },
-  ];
-
-  readonly paquetes: Paquete[] = [
-    {
-      etiqueta: 'El más pedido',
-      nombre: 'Escapada Renovadora',
-      descripcion: 'Media jornada de bienestar intensivo para desconectar del mundo y reconectar contigo.',
-      imagen: 'assets/spa/masaje-aceites.jpg',
-      incluye: [
-        'Masaje Balinés de 75 minutos',
-        'Facial Luminosidad personalizado',
-        'Circuito termal (2 horas)',
-        'Almuerzo wellness en Mare Nostrum',
-        'Kit de amenities orgánicos de regalo',
-      ],
-      duracion: '4 horas',
-      precio: 750,
-    },
-    {
-      etiqueta: 'Experiencia premium',
-      nombre: 'Ritual del Pacífico',
-      descripcion: 'Un día completo de bienestar que termina frente al mar, con cena degustación incluida.',
-      imagen: 'assets/spa/ritual-facial.jpg',
-      incluye: [
-        'Circuito termal con acceso ilimitado',
-        'Envoltura corporal de algas marinas',
-        'Masaje Balinés de 90 minutos',
-        'Sesión privada de yoga al atardecer',
-        'Cena degustación en Mare Nostrum',
-        'Zona VIP de relax con espumante',
-      ],
-      duracion: 'Día completo',
-      precio: 1350,
     },
   ];
 
@@ -174,6 +85,33 @@ export class SpaWellnessComponent {
   readonly enviando = signal(false);
   readonly enviado = signal(false);
   readonly indiceInstalacion = signal(0);
+
+  ngOnInit(): void {
+    if (this.isBrowser) {
+      this.cargarCatalogo();
+    }
+  }
+
+  cargarCatalogo(): void {
+    this.cargando.set(true);
+    this.errorCarga.set(false);
+
+    forkJoin({
+      tratamientos: this.catalogoService.getTratamientos(),
+      paquetes: this.catalogoService.getPaquetes(),
+    }).subscribe({
+      next: ({ tratamientos, paquetes }) => {
+        this.tratamientos.set(tratamientos);
+        this.paquetes.set(paquetes);
+        this.cargando.set(false);
+      },
+      error: (error) => {
+        console.error('Error al cargar el catálogo del spa:', error);
+        this.errorCarga.set(true);
+        this.cargando.set(false);
+      },
+    });
+  }
 
   enviarConsulta(): void {
     if (this.consultaForm.invalid) {
