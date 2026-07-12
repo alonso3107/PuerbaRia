@@ -37,6 +37,12 @@ public class ApiExceptionHandler {
                 .body(Map.of("error", "Correo o contrasena incorrectos."));
     }
 
+    @ExceptionHandler(SesionInvalidaException.class)
+    public ResponseEntity<Map<String, String>> handleSesionInvalida(SesionInvalidaException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", exception.getMessage()));
+    }
+
     @ExceptionHandler(RecursoNoEncontradoException.class)
     public ResponseEntity<Map<String, String>> handleNoEncontrado(RecursoNoEncontradoException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", exception.getMessage()));

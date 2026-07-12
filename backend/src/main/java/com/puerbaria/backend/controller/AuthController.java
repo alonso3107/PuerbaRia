@@ -3,6 +3,7 @@ package com.puerbaria.backend.controller;
 import com.puerbaria.backend.dto.AuthResponse;
 import com.puerbaria.backend.dto.GoogleLoginRequest;
 import com.puerbaria.backend.dto.LoginRequest;
+import com.puerbaria.backend.dto.RefreshRequest;
 import com.puerbaria.backend.dto.RegisterRequest;
 import com.puerbaria.backend.service.AuthService;
 import jakarta.validation.Valid;
@@ -33,5 +34,16 @@ public class AuthController {
     @PostMapping("/google")
     public ResponseEntity<AuthResponse> loginConGoogle(@Valid @RequestBody GoogleLoginRequest request) {
         return ResponseEntity.ok(authService.loginConGoogle(request.credential()));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+        return ResponseEntity.ok(authService.refrescar(request.refreshToken()));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshRequest request) {
+        authService.cerrarSesion(request.refreshToken());
+        return ResponseEntity.noContent().build();
     }
 }

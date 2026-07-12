@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, finalize, share, tap } from 'rxjs';
 import { environment } from '@environments/environment';
 
 export interface RegisterRequest {
@@ -17,6 +17,7 @@ export interface LoginRequest {
 
 export interface AuthResponse {
   token: string;
+  refreshToken: string;
   name: string;
   email: string;
   role: 'USER' | 'ADMIN';
@@ -30,12 +31,17 @@ export class AuthService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly tokenKey = 'auth_token';
+  private readonly refreshKey = 'auth_refresh_token';
   private readonly userKey = 'auth_user';
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   // Usamos signals para un estado reactivo y moderno
   private readonly _currentUser = signal<AuthResponse | null>(this.getUserFromStorage());
-  
+
+  // Renovación en curso compartida: si varias peticiones reciben 401 a la vez,
+  // todas esperan el mismo refresh en lugar de disparar uno cada una
+  private renovacionEnCurso$: Observable<AuthResponse> | null = null;
+
   // Exponemos el usuario actual y el estado de autenticación
   readonly currentUser = computed(() => this._currentUser());
   readonly isAuthenticated = computed(() => !!this._currentUser());
@@ -59,6 +65,25 @@ export class AuthService {
       .pipe(tap((response) => this.saveSession(response)));
   }
 
+  /**
+   * Renueva la sesión con el refresh token. El backend rota el token:
+   * entrega un access token nuevo y un refresh token nuevo, y el anterior
+   * queda revocado.
+   */
+  refrescarSesion(): Observable<AuthResponse> {
+    if (!this.renovacionEnCurso$) {
+      this.renovacionEnCurso$ = this.http
+        .post<AuthResponse>(`${this.apiUrl}/refresh`, { refreshToken: this.getRefreshToken() })
+        .pipe(
+          tap((response) => this.saveSession(response)),
+          finalize(() => (this.renovacionEnCurso$ = null)),
+          share()
+        );
+    }
+
+    return this.renovacionEnCurso$;
+  }
+
   getToken(): string | null {
     if (!this.isBrowser) {
       return null;
@@ -67,15 +92,37 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
-  logout(): void {
+  getRefreshToken(): string | null {
     if (!this.isBrowser) {
-      this._currentUser.set(null);
+      return null;
+    }
+
+    return localStorage.getItem(this.refreshKey);
+  }
+
+  /** Revoca el refresh token en el backend y limpia la sesión local. */
+  logout(): void {
+    const refreshToken = this.getRefreshToken();
+    if (refreshToken) {
+      this.http
+        .post(`${this.apiUrl}/logout`, { refreshToken })
+        .subscribe({ error: () => undefined });
+    }
+
+    this.clearSession();
+  }
+
+  /** Limpia la sesión local sin llamar al backend (token ya inválido). */
+  clearSession(): void {
+    this._currentUser.set(null);
+
+    if (!this.isBrowser) {
       return;
     }
 
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshKey);
     localStorage.removeItem(this.userKey);
-    this._currentUser.set(null);
   }
 
   private saveSession(response: AuthResponse): void {
@@ -85,6 +132,7 @@ export class AuthService {
     }
 
     localStorage.setItem(this.tokenKey, response.token);
+    localStorage.setItem(this.refreshKey, response.refreshToken);
     localStorage.setItem(this.userKey, JSON.stringify(response));
     this._currentUser.set(response);
   }

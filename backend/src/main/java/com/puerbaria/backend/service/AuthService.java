@@ -4,6 +4,7 @@ import com.puerbaria.backend.dto.AuthResponse;
 import com.puerbaria.backend.dto.LoginRequest;
 import com.puerbaria.backend.dto.RegisterRequest;
 import com.puerbaria.backend.exception.RecursoNoEncontradoException;
+import com.puerbaria.backend.model.RefreshToken;
 import com.puerbaria.backend.model.Role;
 import com.puerbaria.backend.model.User;
 import com.puerbaria.backend.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -24,6 +26,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
@@ -60,6 +63,19 @@ public class AuthService {
         return construirRespuesta(user);
     }
 
+    // Transaccional para poder leer el usuario (LAZY) del token rotado
+    @Transactional
+    public AuthResponse refrescar(String refreshToken) {
+        RefreshToken renovado = refreshTokenService.rotar(refreshToken);
+        User user = renovado.getUser();
+        String token = jwtService.generateToken(user);
+        return new AuthResponse(token, renovado.getToken(), user.getName(), user.getEmail(), user.getRole().name());
+    }
+
+    public void cerrarSesion(String refreshToken) {
+        refreshTokenService.revocar(refreshToken);
+    }
+
     private User registrarDesdeGoogle(GoogleTokenVerifier.DatosGoogle datos) {
         User user = User.builder()
                 .name(datos.nombre())
@@ -73,6 +89,7 @@ public class AuthService {
 
     private AuthResponse construirRespuesta(User user) {
         String token = jwtService.generateToken(user);
-        return new AuthResponse(token, user.getName(), user.getEmail(), user.getRole().name());
+        String refreshToken = refreshTokenService.crear(user);
+        return new AuthResponse(token, refreshToken, user.getName(), user.getEmail(), user.getRole().name());
     }
 }
