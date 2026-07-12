@@ -1,0 +1,53 @@
+name: Desplegar frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/desplegar-frontend.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: desplegar-frontend
+  cancel-in-progress: true
+
+jobs:
+  desplegar:
+    name: Publicar en Cloudflare Workers
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: frontend/package.json
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Build de produccion
+        run: pnpm build
+
+      - name: Asegurar index.html para el fallback SPA
+        run: |
+          cd dist/puerbaria/browser
+          if [ ! -f index.html ] && [ -f index.csr.html ]; then
+            cp index.csr.html index.html
+          fi
+
+      - name: Desplegar con Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: frontend
