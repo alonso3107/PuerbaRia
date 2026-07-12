@@ -31,13 +31,24 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   /** Formulario reactivo de inicio de sesión */
   readonly loginForm: FormGroup = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/)]]
+    email: ['', [
+      Validators.required,
+      Validators.email,
+      Validators.maxLength(254),
+      Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/),
+    ]],
+    password: ['', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(128),
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,128}$/),
+    ]]
   });
 
   /** Estados locales controlados mediante Signals */
   readonly isLoading = signal(false);
   readonly errorMessage = signal('');
+  readonly passwordVisible = signal(false);
   readonly googleHabilitado = !!environment.googleClientId;
 
   ngOnInit(): void {
@@ -68,6 +79,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
   onSubmit(): void {
     this.errorMessage.set('');
 
+    const emailControl = this.loginForm.controls['email'];
+    emailControl.setValue(emailControl.value.trim().toLowerCase());
+
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -91,6 +105,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
   }
 
+  alternarVisibilidadPassword(): void {
+    this.passwordVisible.update((visible) => !visible);
+  }
+
   /**
    * Carga el script de Google Identity Services y dibuja el botón oficial.
    * Al confirmar la cuenta, Google entrega un ID token que el backend valida.
@@ -111,10 +129,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.zone.run(() => this.ingresarConGoogle(respuesta.credential)),
       });
 
+      const anchoBoton = Math.min(400, this.botonGoogle.nativeElement.clientWidth || 320);
       google.accounts.id.renderButton(this.botonGoogle.nativeElement, {
         theme: 'outline',
         size: 'large',
-        width: 320,
+        width: anchoBoton,
         text: 'continue_with',
         locale: 'es',
       });
