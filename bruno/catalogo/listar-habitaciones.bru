@@ -1,0 +1,26 @@
+meta {
+  name: Listar habitaciones
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/habitaciones
+  body: none
+  auth: none
+}
+
+tests {
+  test("devuelve habitaciones", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.be.an("array").that.is.not.empty;
+    expect(res.body[0]).to.have.all.keys(
+      "id", "nombre", "esencia", "descripcion", "precio", "tamano",
+      "capacidad", "cama", "vista", "idealPara", "amenidades", "condiciones", "fotos"
+    );
+  });
+}
+
+docs {
+  Endpoint publico. Devuelve las habitaciones con amenidades, condiciones y fotos.
+}

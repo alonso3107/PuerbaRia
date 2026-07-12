@@ -26,7 +26,7 @@ describe('FooterComponent', () => {
   });
 
   it('no debería suscribir si el email está vacío', () => {
-    component.emailNewsletter = '';
+    component.emailControl.setValue('');
     component.suscribirNewsletter();
     expect(component.newsletterEnviando()).toBe(false);
     expect(component.newsletterEnviado()).toBe(false);
@@ -34,19 +34,19 @@ describe('FooterComponent', () => {
 
   it('debería simular el envío de newsletter con éxito', () => {
     vi.useFakeTimers();
-    component.emailNewsletter = 'test@example.com';
+    component.emailControl.setValue('test@example.com');
     component.suscribirNewsletter();
-    
+
     expect(component.newsletterEnviando()).toBe(true);
     expect(component.newsletterEnviado()).toBe(false);
-    
+
     // Avanza el tiempo 1.2s para simular la petición http
     vi.advanceTimersByTime(1200);
-    
+
     expect(component.newsletterEnviando()).toBe(false);
     expect(component.newsletterEnviado()).toBe(true);
-    expect(component.emailNewsletter).toBe('');
-    
+    expect(component.emailControl.value).toBeNull();
+
     // Avanza el tiempo 5s para que se limpie el mensaje de éxito
     vi.advanceTimersByTime(5000);
     expect(component.newsletterEnviado()).toBe(false);

@@ -1,0 +1,38 @@
+meta {
+  name: Crear habitacion
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/habitaciones
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "nombre": "Suite Prueba",
+    "esencia": "Una suite de ejemplo",
+    "descripcion": "Descripcion de la habitacion de prueba.",
+    "precio": 500,
+    "tamano": 40,
+    "capacidad": 2,
+    "cama": "Queen size",
+    "vista": "Jardin",
+    "idealPara": "Parejas",
+    "amenidades": ["Minibar", "Smart TV"],
+    "condiciones": ["Desayuno incluido"],
+    "fotos": [
+      { "src": "assets/superior-jardin.jpg", "alt": "Foto de ejemplo" }
+    ]
+  }
+}
+
+docs {
+  Requiere sesion de ADMIN (request Login). Devuelve 201 con la habitacion creada.
+}

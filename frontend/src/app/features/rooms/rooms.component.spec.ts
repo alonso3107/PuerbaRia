@@ -1,8 +1,28 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { RoomsComponent } from './rooms.component';
 import { AuthService } from '@core/services/auth.service';
+import { CatalogoService, Habitacion } from '@core/services/catalogo.service';
 import { MessageService } from 'primeng/api';
 import { provideRouter } from '@angular/router';
+
+const habitacionesMock: Habitacion[] = [
+  {
+    id: 1,
+    nombre: 'Suite Oceano',
+    esencia: 'La suite insignia',
+    descripcion: 'Descripcion de prueba.',
+    precio: 890,
+    tamano: 65,
+    capacidad: 2,
+    cama: 'King size',
+    vista: 'Mar, frontal',
+    idealPara: 'Aniversarios',
+    amenidades: ['Terraza privada'],
+    condiciones: ['Desayuno incluido'],
+    fotos: [{ src: 'assets/suite-oceano.jpg', alt: 'Suite Oceano' }],
+  },
+];
 
 describe('RoomsComponent', () => {
   let component: RoomsComponent;
@@ -26,6 +46,7 @@ describe('RoomsComponent', () => {
       providers: [
         provideRouter([]),
         { provide: AuthService, useValue: { isAuthenticated: vi.fn().mockReturnValue(false) } },
+        { provide: CatalogoService, useValue: { getHabitaciones: vi.fn().mockReturnValue(of(habitacionesMock)) } },
         { provide: MessageService, useValue: { add: vi.fn() } }
       ]
     }).compileComponents();
@@ -39,10 +60,11 @@ describe('RoomsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería contener una lista de 4 habitaciones con amenidades', () => {
-    expect(component.rooms.length).toBe(4);
-    expect(component.rooms[0].nombre).toBe('Suite Oceano');
-    expect(component.rooms[0].amenidades.length).toBeGreaterThan(0);
+  it('debería cargar las habitaciones desde el catalogo', () => {
+    expect(component.habitaciones().length).toBe(1);
+    expect(component.habitaciones()[0].nombre).toBe('Suite Oceano');
+    expect(component.fotoActiva()).toEqual([0]);
+    expect(component.cargando()).toBe(false);
   });
 
   it('debería contener una lista de servicios incluidos', () => {

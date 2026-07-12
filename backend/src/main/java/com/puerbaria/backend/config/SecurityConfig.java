@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +33,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/vouchers/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/habitaciones/**", "/api/v1/spa/**").permitAll()
+                .requestMatchers("/api/v1/habitaciones/**", "/api/v1/spa/**").hasAuthority("ADMIN")
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()

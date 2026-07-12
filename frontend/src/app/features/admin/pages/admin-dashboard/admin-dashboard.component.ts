@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { AdminService, AdminUser, AdminVoucher, VoucherDecision } from '@features/admin/services/admin.service';
+import { GestionCatalogoComponent } from '@features/admin/components/gestion-catalogo/gestion-catalogo.component';
 
 /**
  * COMPONENTE DASHBOARD DE ADMINISTRACIÓN — PUERBA RIA
@@ -29,6 +30,7 @@ import { AdminService, AdminUser, AdminVoucher, VoucherDecision } from '@feature
     TagModule,
     ToastModule,
     TooltipModule,
+    GestionCatalogoComponent,
   ],
   providers: [MessageService],
   templateUrl: './admin-dashboard.component.html',

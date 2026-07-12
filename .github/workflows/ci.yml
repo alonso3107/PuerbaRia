@@ -64,5 +64,8 @@ jobs:
       - name: Instalar dependencias
         run: pnpm install --frozen-lockfile
 
+      - name: Ejecutar tests
+        run: pnpm test
+
       - name: Build de produccion
         run: pnpm build

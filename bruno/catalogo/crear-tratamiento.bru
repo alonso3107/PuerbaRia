@@ -1,0 +1,29 @@
+meta {
+  name: Crear tratamiento de spa
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/spa/tratamientos
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "icono": "pi-sun",
+    "nombre": "Tratamiento Prueba",
+    "descripcion": "Descripcion del tratamiento de prueba.",
+    "duracion": "30 min",
+    "precio": 150
+  }
+}
+
+docs {
+  Requiere sesion de ADMIN. Tambien existen PUT y DELETE en /api/v1/spa/tratamientos/{id}.
+}

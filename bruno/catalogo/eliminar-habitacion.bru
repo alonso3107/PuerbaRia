@@ -1,0 +1,19 @@
+meta {
+  name: Eliminar habitacion
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/habitaciones/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  Requiere sesion de ADMIN. Cambiar el 1 de la URL por el id de la habitacion. Devuelve 204.
+}
