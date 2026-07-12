@@ -59,9 +59,10 @@ resource "google_compute_instance" "servidor" {
     ssh-keys = "${var.usuario_ssh}:${var.llave_ssh_publica}"
 
     startup-script = templatefile("${path.module}/plantillas/arranque.sh.tftpl", {
-      dominio_api    = local.dominio_api
-      imagen_backend = var.imagen_backend
-      usuario_ssh    = var.usuario_ssh
+      dominio_api       = local.dominio_api
+      imagen_backend    = var.imagen_backend
+      usuario_ssh       = var.usuario_ssh
+      llave_ssh_publica = var.llave_ssh_publica
     })
   }
 
