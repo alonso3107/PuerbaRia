@@ -43,6 +43,54 @@ describe('LoginComponent', () => {
     expect(mockAuthService.login).not.toHaveBeenCalled();
   });
 
+  it('debería rechazar correos con espacios o sin dominio completo', () => {
+    component.loginForm.setValue({
+      email: 'usuario @dominio',
+      password: 'Password123',
+    });
+
+    component.onSubmit();
+
+    expect(component.loginForm.controls['email'].invalid).toBe(true);
+    expect(mockAuthService.login).not.toHaveBeenCalled();
+  });
+
+  it('debería normalizar el correo antes de autenticar', () => {
+    component.loginForm.setValue({
+      email: '  Usuario@Example.COM  ',
+      password: 'Password123',
+    });
+    mockAuthService.login.mockReturnValue(of({ token: 'token-123', role: 'USER' }));
+    mockAuthService.isAdmin = () => false;
+
+    component.onSubmit();
+
+    expect(mockAuthService.login).toHaveBeenCalledWith({
+      email: 'usuario@example.com',
+      password: 'Password123',
+    });
+  });
+
+  it('debería exigir una contraseña robusta y con longitud segura', () => {
+    component.loginForm.setValue({
+      email: 'test@example.com',
+      password: 'password',
+    });
+
+    component.onSubmit();
+
+    expect(component.loginForm.controls['password'].invalid).toBe(true);
+    expect(mockAuthService.login).not.toHaveBeenCalled();
+  });
+
+  it('debería alternar la visibilidad de la contraseña', () => {
+    expect(component.passwordVisible()).toBe(false);
+
+    component.alternarVisibilidadPassword();
+
+    expect(component.passwordVisible()).toBe(true);
+  });
+
   it('debería iniciar sesión correctamente para usuario estándar y navegar al inicio', () => {
     component.loginForm.setValue({
       email: 'test@example.com',
