@@ -53,6 +53,12 @@ export class AuthService {
       .pipe(tap((response) => this.saveSession(response)));
   }
 
+  loginConGoogle(credential: string): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/google`, { credential })
+      .pipe(tap((response) => this.saveSession(response)));
+  }
+
   getToken(): string | null {
     if (!this.isBrowser) {
       return null;

@@ -1,8 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnInit, PLATFORM_ID, ViewChild, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { MessageService } from 'primeng/api';
+import { environment } from '@environments/environment';
 
 /**
  * COMPONENTE LOGIN
@@ -16,12 +18,16 @@ import { MessageService } from 'primeng/api';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly messageService = inject(MessageService);
+  private readonly zone = inject(NgZone);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  @ViewChild('botonGoogle') botonGoogle?: ElementRef<HTMLDivElement>;
 
   /** Formulario reactivo de inicio de sesión */
   readonly loginForm: FormGroup = this.fb.nonNullable.group({
@@ -32,6 +38,7 @@ export class LoginComponent implements OnInit {
   /** Estados locales controlados mediante Signals */
   readonly isLoading = signal(false);
   readonly errorMessage = signal('');
+  readonly googleHabilitado = !!environment.googleClientId;
 
   ngOnInit(): void {
     const intent = this.route.snapshot.queryParamMap.get('intent');
@@ -45,6 +52,12 @@ export class LoginComponent implements OnInit {
           life: 6000
         });
       }, 300);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.isBrowser && this.googleHabilitado) {
+      this.prepararBotonGoogle();
     }
   }
 
@@ -65,11 +78,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.getRawValue()).subscribe({
       next: () => {
         this.isLoading.set(false);
-        if (this.authService.isAdmin()) {
-          this.router.navigate(['/admin/dashboard']);
-        } else {
-          this.router.navigate(['/']);
-        }
+        this.redirigirSegunRol();
       },
       error: (error) => {
         this.isLoading.set(false);
@@ -80,5 +89,64 @@ export class LoginComponent implements OnInit {
         );
       },
     });
+  }
+
+  /**
+   * Carga el script de Google Identity Services y dibuja el botón oficial.
+   * Al confirmar la cuenta, Google entrega un ID token que el backend valida.
+   */
+  private prepararBotonGoogle(): void {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.onload = () => {
+      const google = (window as any).google;
+      if (!google || !this.botonGoogle) {
+        return;
+      }
+
+      google.accounts.id.initialize({
+        client_id: environment.googleClientId,
+        callback: (respuesta: { credential: string }) =>
+          this.zone.run(() => this.ingresarConGoogle(respuesta.credential)),
+      });
+
+      google.accounts.id.renderButton(this.botonGoogle.nativeElement, {
+        theme: 'outline',
+        size: 'large',
+        width: 320,
+        text: 'continue_with',
+        locale: 'es',
+      });
+    };
+    document.head.appendChild(script);
+  }
+
+  private ingresarConGoogle(credential: string): void {
+    this.errorMessage.set('');
+    this.isLoading.set(true);
+
+    this.authService.loginConGoogle(credential).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.redirigirSegunRol();
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(
+          error.status === 0
+            ? 'No se pudo conectar con el servidor. Verifica que el backend este encendido.'
+            : error.error?.error ?? 'No se pudo iniciar sesion con Google. Intente nuevamente.'
+        );
+      },
+    });
+  }
+
+  private redirigirSegunRol(): void {
+    if (this.authService.isAdmin()) {
+      this.router.navigate(['/admin/dashboard']);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 }

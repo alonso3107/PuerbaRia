@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -21,6 +23,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final GoogleTokenVerifier googleTokenVerifier;
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
@@ -46,6 +49,26 @@ public class AuthService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
 
         return construirRespuesta(user);
+    }
+
+    public AuthResponse loginConGoogle(String credential) {
+        GoogleTokenVerifier.DatosGoogle datos = googleTokenVerifier.verificar(credential);
+
+        User user = userRepository.findByEmail(datos.email())
+                .orElseGet(() -> registrarDesdeGoogle(datos));
+
+        return construirRespuesta(user);
+    }
+
+    private User registrarDesdeGoogle(GoogleTokenVerifier.DatosGoogle datos) {
+        User user = User.builder()
+                .name(datos.nombre())
+                .email(datos.email())
+                .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .role(Role.USER)
+                .build();
+
+        return userRepository.save(user);
     }
 
     private AuthResponse construirRespuesta(User user) {
