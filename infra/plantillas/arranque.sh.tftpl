@@ -19,6 +19,14 @@ fi
 id -u ${usuario_ssh} > /dev/null 2>&1 || useradd -m -s /bin/bash ${usuario_ssh}
 usermod -aG docker ${usuario_ssh}
 
+# El agente de GCE no gestiona llaves de usuarios que no creo el mismo,
+# asi que la llave de deploy se instala aqui directamente.
+mkdir -p /home/${usuario_ssh}/.ssh
+echo '${llave_ssh_publica}' > /home/${usuario_ssh}/.ssh/authorized_keys
+chmod 700 /home/${usuario_ssh}/.ssh
+chmod 600 /home/${usuario_ssh}/.ssh/authorized_keys
+chown -R ${usuario_ssh}:${usuario_ssh} /home/${usuario_ssh}/.ssh
+
 mkdir -p /opt/puerbaria
 chown ${usuario_ssh}:${usuario_ssh} /opt/puerbaria
 
