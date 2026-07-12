@@ -101,6 +101,7 @@ JWT_SECRET=UN_SECRETO_NUEVO_BASE64_DE_256_BITS
 ADMIN_EMAIL=admin@puerbaria.com
 ADMIN_PASSWORD=UNA_PASSWORD_FUERTE
 CORS_ALLOWED_ORIGINS=https://puerbaria.TU_SUBDOMINIO.workers.dev,http://localhost:4200
+GOOGLE_CLIENT_ID=EL_CLIENT_ID_DEL_OAUTH.apps.googleusercontent.com
 EOF
 chmod 600 /opt/puerbaria/.env
 cd /opt/puerbaria && docker compose up -d

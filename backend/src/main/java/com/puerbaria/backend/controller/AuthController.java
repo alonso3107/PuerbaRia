@@ -1,6 +1,7 @@
 package com.puerbaria.backend.controller;
 
 import com.puerbaria.backend.dto.AuthResponse;
+import com.puerbaria.backend.dto.GoogleLoginRequest;
 import com.puerbaria.backend.dto.LoginRequest;
 import com.puerbaria.backend.dto.RegisterRequest;
 import com.puerbaria.backend.service.AuthService;
@@ -27,5 +28,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponse> loginConGoogle(@Valid @RequestBody GoogleLoginRequest request) {
+        return ResponseEntity.ok(authService.loginConGoogle(request.credential()));
     }
 }

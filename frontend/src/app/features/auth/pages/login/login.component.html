@@ -95,6 +95,18 @@
         </button>
       </div>
 
+      <!-- Login con Google -->
+      @if (googleHabilitado) {
+        <div class="pt-2">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="flex-1 h-px bg-borde"></div>
+            <span class="text-terciario text-[0.65rem] tracking-[0.2em] uppercase">o continua con</span>
+            <div class="flex-1 h-px bg-borde"></div>
+          </div>
+          <div #botonGoogle class="flex justify-center"></div>
+        </div>
+      }
+
       <!-- Links inferiores -->
       <div class="text-center space-y-4 pt-2">
         <a href="#" class="text-xs tracking-wider text-secundario 
