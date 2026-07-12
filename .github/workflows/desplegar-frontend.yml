@@ -38,12 +38,15 @@ jobs:
       - name: Build de produccion
         run: pnpm build
 
-      - name: Asegurar index.html para el fallback SPA
+      - name: Preparar assets para Cloudflare
         run: |
           cd dist/puerbaria/browser
           if [ ! -f index.html ] && [ -f index.csr.html ]; then
             cp index.csr.html index.html
           fi
+          # Angular genera un _redirects estilo Netlify que Cloudflare rechaza;
+          # el fallback SPA ya lo maneja wrangler.jsonc (not_found_handling).
+          rm -f _redirects
 
       - name: Desplegar con Wrangler
         uses: cloudflare/wrangler-action@v3
