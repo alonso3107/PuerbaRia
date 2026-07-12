@@ -31,6 +31,7 @@ PuerbaRia/
 ├── backend/    # API REST — Java 17, Spring Boot, PostgreSQL, JWT
 ├── frontend/   # SPA/SSR — Angular 21, PrimeNG, Tailwind CSS
 ├── bruno/      # Colección de Bruno para probar la API
+├── infra/      # Infraestructura de producción — Terraform (GCP)
 └── .zed/       # Tareas y configuración para el editor Zed
 ```
 
@@ -102,5 +103,10 @@ En desarrollo local no hay nada que configurar: existen valores por defecto. En 
 
 ## Despliegue
 
-- **Backend:** Render, usando el `Dockerfile` de `backend/`.
-- **Frontend:** Netlify, con directorio base `frontend/`.
+La infraestructura de producción está definida como código en [`infra/`](infra/) (Terraform) y documentada paso a paso en [infra/README.md](infra/README.md):
+
+- **API:** VM e2-micro en GCP (capa gratuita, siempre encendida) con Caddy como reverse proxy y TLS automático vía sslip.io; el backend corre en un contenedor publicado en GHCR.
+- **Base de datos:** Supabase (PostgreSQL gestionado, plan free).
+- **Frontend:** Cloudflare Workers, publicado con Wrangler.
+
+Cada push a `main` despliega automáticamente: `desplegar-backend.yml` publica la imagen y reinicia el contenedor en la VM; `desplegar-frontend.yml` publica el build en Cloudflare.

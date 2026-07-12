@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Script de arranque de la VM. Corre en cada boot y es idempotente.
+set -euo pipefail
+
+# Swap de 1 GB: la e2-micro solo tiene 1 GB de RAM y la JVM lo necesita
+if [ ! -f /swapfile ]; then
+  fallocate -l 1G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
+if ! command -v docker > /dev/null 2>&1; then
+  curl -fsSL https://get.docker.com | sh
+fi
+
+# El usuario de deploy necesita ejecutar docker sin sudo
+id -u ${usuario_ssh} > /dev/null 2>&1 || useradd -m -s /bin/bash ${usuario_ssh}
+usermod -aG docker ${usuario_ssh}
+
+mkdir -p /opt/puerbaria
+chown ${usuario_ssh}:${usuario_ssh} /opt/puerbaria
+
+cat > /opt/puerbaria/Caddyfile <<'CADDY'
+${dominio_api} {
+	encode gzip
+	reverse_proxy backend:8080
+}
+CADDY
+
+cat > /opt/puerbaria/compose.yaml <<'COMPOSE'
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+
+  backend:
+    image: ${imagen_backend}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=55.0"
+
+volumes:
+  caddy_data:
+  caddy_config:
+COMPOSE
+
+# Solo levanta los servicios cuando ya existen los secretos (/opt/puerbaria/.env)
+if [ -f /opt/puerbaria/.env ]; then
+  cd /opt/puerbaria
+  docker compose pull --quiet || true
+  docker compose up -d
+fi

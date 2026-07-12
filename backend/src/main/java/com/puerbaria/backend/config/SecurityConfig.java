@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/habitaciones/**", "/api/v1/spa/**").permitAll()
                 .requestMatchers("/api/v1/habitaciones/**", "/api/v1/spa/**").hasAuthority("ADMIN")
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )

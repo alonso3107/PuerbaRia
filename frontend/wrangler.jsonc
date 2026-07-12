@@ -1,0 +1,9 @@
+{
+  // Frontend de Puerba Ria como Worker de assets estaticos (build prerenderizado de Angular)
+  "name": "puerbaria",
+  "compatibility_date": "2026-07-01",
+  "assets": {
+    "directory": "./dist/puerbaria/browser",
+    "not_found_handling": "single-page-application"
+  }
+}
