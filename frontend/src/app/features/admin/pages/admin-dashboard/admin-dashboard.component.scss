@@ -267,7 +267,10 @@
 
 .magic-stagger-1 { animation-delay: 0.1s; opacity: 0; }
 .magic-stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.magic-stagger-3 { animation-delay: 0.3s; opacity: 0; }
 
+/* El estado final debe quedar en `none`: un transform residual convierte a la
+   sección en containing block y rompe los diálogos con position: fixed. */
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
@@ -275,7 +278,7 @@
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 

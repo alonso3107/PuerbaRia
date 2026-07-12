@@ -1,6 +1,8 @@
 <p-toast position="top-right" />
 
-<section class="admin-dashboard min-h-screen bg-fondo pt-28 pb-16 px-6 md:px-12 magic-entrance">
+<!-- La seccion no se anima: un transform activo la volveria containing block
+     y desanclaria los dialogos fijos que viven dentro. -->
+<section class="admin-dashboard min-h-screen bg-fondo pt-28 pb-16 px-6 md:px-12">
   <div class="max-w-7xl mx-auto">
     <div class="dashboard-header magic-entrance magic-stagger-1">
       <div>
@@ -17,7 +19,7 @@
       />
     </div>
 
-    <div class="metrics-grid">
+    <div class="metrics-grid magic-entrance magic-stagger-2">
       <p-card styleClass="metric-card">
         <p class="metric-label">Usuarios</p>
         <p class="metric-value">{{ users().length }}</p>
@@ -40,7 +42,7 @@
     </div>
 
     <div class="content-grid">
-      <section class="panel-surface">
+      <section class="panel-surface magic-entrance magic-stagger-3">
         <div class="panel-heading">
           <div>
             <p class="panel-kicker">Revision de pagos</p>
@@ -155,7 +157,7 @@
         }
       </section>
 
-      <section class="panel-surface">
+      <section class="panel-surface magic-entrance magic-stagger-3">
         <div class="panel-heading">
           <div>
             <p class="panel-kicker">Cuentas</p>

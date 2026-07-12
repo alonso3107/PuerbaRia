@@ -197,72 +197,80 @@
   [header]="'Habitacion'"
   [modal]="true"
   [visible]="habitacionDialogVisible()"
-  [style]="{ width: 'min(94vw, 680px)' }"
+  [style]="{ width: 'min(96vw, 1080px)' }"
+  styleClass="dialogo-catalogo"
   (visibleChange)="habitacionDialogVisible.set($event)"
 >
-  <form [formGroup]="habitacionForm" (ngSubmit)="guardarHabitacion()" class="formulario-catalogo">
-    <div class="fila-doble">
-      <div class="campo">
-        <label for="hab-nombre">Nombre *</label>
-        <input pInputText id="hab-nombre" formControlName="nombre" placeholder="Suite Océano" />
-      </div>
-      <div class="campo">
-        <label for="hab-precio">Precio por noche (S/) *</label>
-        <p-inputnumber inputId="hab-precio" formControlName="precio" mode="decimal"
-                       [min]="1" [maxFractionDigits]="2" [useGrouping]="false" />
-      </div>
+  <form id="form-habitacion" [formGroup]="habitacionForm" (ngSubmit)="guardarHabitacion()" class="formulario-catalogo">
+    <div class="columnas-dialogo">
+      <section class="grupo-dialogo">
+        <h3 class="titulo-grupo">La habitacion</h3>
+
+        <div class="campo">
+          <label for="hab-nombre">Nombre *</label>
+          <input pInputText id="hab-nombre" formControlName="nombre" placeholder="Suite Océano" />
+        </div>
+
+        <div class="campo">
+          <label for="hab-esencia">Esencia *</label>
+          <input pInputText id="hab-esencia" formControlName="esencia" placeholder="La suite insignia, frente al Pacífico" />
+        </div>
+
+        <div class="campo">
+          <label for="hab-descripcion">Descripcion *</label>
+          <textarea pTextarea id="hab-descripcion" formControlName="descripcion" rows="6"></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="hab-ideal">Ideal para *</label>
+          <input pInputText id="hab-ideal" formControlName="idealPara" placeholder="Aniversarios y lunas de miel" />
+        </div>
+      </section>
+
+      <section class="grupo-dialogo">
+        <h3 class="titulo-grupo">Detalles y tarifa</h3>
+
+        <div class="fila-triple">
+          <div class="campo">
+            <label for="hab-precio">Precio (S/) *</label>
+            <p-inputnumber inputId="hab-precio" formControlName="precio" mode="decimal"
+                           [min]="1" [maxFractionDigits]="2" [useGrouping]="false" />
+          </div>
+          <div class="campo">
+            <label for="hab-tamano">Superficie (m²) *</label>
+            <p-inputnumber inputId="hab-tamano" formControlName="tamano" [min]="1" [useGrouping]="false" />
+          </div>
+          <div class="campo">
+            <label for="hab-capacidad">Huespedes *</label>
+            <p-inputnumber inputId="hab-capacidad" formControlName="capacidad" [min]="1" [useGrouping]="false" />
+          </div>
+        </div>
+
+        <div class="fila-doble">
+          <div class="campo">
+            <label for="hab-cama">Cama *</label>
+            <input pInputText id="hab-cama" formControlName="cama" placeholder="King size" />
+          </div>
+          <div class="campo">
+            <label for="hab-vista">Vista *</label>
+            <input pInputText id="hab-vista" formControlName="vista" placeholder="Mar, frontal" />
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="hab-amenidades">Amenidades (una por linea) *</label>
+          <textarea pTextarea id="hab-amenidades" formControlName="amenidades" rows="4"></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="hab-condiciones">Condiciones (una por linea) *</label>
+          <textarea pTextarea id="hab-condiciones" formControlName="condiciones" rows="3"></textarea>
+        </div>
+      </section>
     </div>
 
-    <div class="campo">
-      <label for="hab-esencia">Esencia *</label>
-      <input pInputText id="hab-esencia" formControlName="esencia" placeholder="La suite insignia, frente al Pacífico" />
-    </div>
-
-    <div class="campo">
-      <label for="hab-descripcion">Descripcion *</label>
-      <textarea pTextarea id="hab-descripcion" formControlName="descripcion" rows="4"></textarea>
-    </div>
-
-    <div class="fila-doble">
-      <div class="campo">
-        <label for="hab-tamano">Superficie (m²) *</label>
-        <p-inputnumber inputId="hab-tamano" formControlName="tamano" [min]="1" [useGrouping]="false" />
-      </div>
-      <div class="campo">
-        <label for="hab-capacidad">Capacidad (huespedes) *</label>
-        <p-inputnumber inputId="hab-capacidad" formControlName="capacidad" [min]="1" [useGrouping]="false" />
-      </div>
-    </div>
-
-    <div class="fila-doble">
-      <div class="campo">
-        <label for="hab-cama">Cama *</label>
-        <input pInputText id="hab-cama" formControlName="cama" placeholder="King size" />
-      </div>
-      <div class="campo">
-        <label for="hab-vista">Vista *</label>
-        <input pInputText id="hab-vista" formControlName="vista" placeholder="Mar, frontal" />
-      </div>
-    </div>
-
-    <div class="campo">
-      <label for="hab-ideal">Ideal para *</label>
-      <input pInputText id="hab-ideal" formControlName="idealPara" placeholder="Aniversarios y lunas de miel" />
-    </div>
-
-    <div class="fila-doble">
-      <div class="campo">
-        <label for="hab-amenidades">Amenidades (una por linea) *</label>
-        <textarea pTextarea id="hab-amenidades" formControlName="amenidades" rows="5"></textarea>
-      </div>
-      <div class="campo">
-        <label for="hab-condiciones">Condiciones (una por linea) *</label>
-        <textarea pTextarea id="hab-condiciones" formControlName="condiciones" rows="5"></textarea>
-      </div>
-    </div>
-
-    <div class="campo" formArrayName="fotos">
-      <label>Fotos *</label>
+    <section class="grupo-dialogo" formArrayName="fotos">
+      <h3 class="titulo-grupo">Fotos</h3>
       @for (foto of fotosFormArray.controls; track foto; let f = $index) {
         <div class="fila-foto" [formGroupName]="f">
           <input pInputText formControlName="src" placeholder="assets/rooms/foto.jpg" aria-label="Ruta de la foto" />
@@ -274,14 +282,17 @@
       }
       <p-button label="Agregar foto" icon="pi pi-plus" severity="secondary" [outlined]="true"
                 size="small" (onClick)="agregarFoto()" />
-    </div>
+    </section>
+  </form>
 
+  <ng-template pTemplate="footer">
     <div class="dialog-actions">
       <p-button label="Cancelar" severity="secondary" [outlined]="true"
                 (onClick)="habitacionDialogVisible.set(false)" />
-      <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="guardando()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="guardando()"
+                (onClick)="guardarHabitacion()" />
     </div>
-  </form>
+  </ng-template>
 </p-dialog>
 
 <p-dialog
@@ -289,6 +300,7 @@
   [modal]="true"
   [visible]="tratamientoDialogVisible()"
   [style]="{ width: 'min(94vw, 540px)' }"
+  styleClass="dialogo-catalogo"
   (visibleChange)="tratamientoDialogVisible.set($event)"
 >
   <form [formGroup]="tratamientoForm" (ngSubmit)="guardarTratamiento()" class="formulario-catalogo">
@@ -326,13 +338,16 @@
                        [min]="1" [maxFractionDigits]="2" [useGrouping]="false" />
       </div>
     </div>
+  </form>
 
+  <ng-template pTemplate="footer">
     <div class="dialog-actions">
       <p-button label="Cancelar" severity="secondary" [outlined]="true"
                 (onClick)="tratamientoDialogVisible.set(false)" />
-      <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="guardando()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="guardando()"
+                (onClick)="guardarTratamiento()" />
     </div>
-  </form>
+  </ng-template>
 </p-dialog>
 
 <p-dialog
@@ -340,6 +355,7 @@
   [modal]="true"
   [visible]="paqueteDialogVisible()"
   [style]="{ width: 'min(94vw, 560px)' }"
+  styleClass="dialogo-catalogo"
   (visibleChange)="paqueteDialogVisible.set($event)"
 >
   <form [formGroup]="paqueteForm" (ngSubmit)="guardarPaquete()" class="formulario-catalogo">
@@ -380,11 +396,14 @@
       <label for="paq-incluye">Incluye (un beneficio por linea) *</label>
       <textarea pTextarea id="paq-incluye" formControlName="incluye" rows="5"></textarea>
     </div>
+  </form>
 
+  <ng-template pTemplate="footer">
     <div class="dialog-actions">
       <p-button label="Cancelar" severity="secondary" [outlined]="true"
                 (onClick)="paqueteDialogVisible.set(false)" />
-      <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="guardando()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="guardando()"
+                (onClick)="guardarPaquete()" />
     </div>
-  </form>
+  </ng-template>
 </p-dialog>

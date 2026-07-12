@@ -66,10 +66,16 @@
     font-weight: 600;
     letter-spacing: 0.06em;
     padding: 0.45rem 1rem;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition-property: background-color, color, transform;
+    transition-duration: 0.25s;
+    transition-timing-function: ease;
 
     &:hover {
       color: var(--color-texto);
+    }
+
+    &:active {
+      transform: scale(0.96);
     }
 
     &.activo {
@@ -172,12 +178,42 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .fila-triple {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .fila-foto {
     align-items: center;
     display: grid;
     gap: 0.5rem;
     grid-template-columns: 1fr 1fr auto;
     margin-bottom: 0.5rem;
+  }
+}
+
+.columnas-dialogo {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1.05fr 1fr;
+}
+
+.grupo-dialogo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  min-width: 0;
+
+  .titulo-grupo {
+    border-bottom: 1px solid var(--color-borde);
+    color: var(--color-acento);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    margin: 0;
+    padding-bottom: 0.6rem;
+    text-transform: uppercase;
   }
 }
 
@@ -196,7 +232,6 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: flex-end;
-  margin-top: 0.5rem;
 }
 
 :host ::ng-deep {
@@ -223,6 +258,7 @@
       > td {
         border-bottom: 1px solid var(--color-borde);
         color: var(--color-texto);
+        font-variant-numeric: tabular-nums;
         padding: 0.95rem 1rem;
         vertical-align: middle;
       }
@@ -246,13 +282,40 @@
     width: 100%;
   }
 
-  .p-dialog {
+  .dialogo-catalogo {
     border-radius: var(--radius-xl);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+
+    .p-dialog-content {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .p-dialog-header,
+    .p-dialog-footer {
+      flex-shrink: 0;
+    }
+
+    .p-dialog-footer {
+      border-top: 1px solid var(--color-borde);
+      padding-top: 1rem;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .columnas-dialogo {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .formulario-catalogo .fila-doble {
+  .formulario-catalogo .fila-doble,
+  .formulario-catalogo .fila-triple {
     grid-template-columns: 1fr;
   }
 
